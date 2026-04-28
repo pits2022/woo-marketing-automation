@@ -78,7 +78,10 @@ function emailSendGeneral($to, $name, $sub, $content, $unsubscribe_url): bool {
     $body = str_replace('___NAME___', $greeting, $body);
     $body = str_replace('__UNSUBSCRIBE_URL__', $unsubscribe_url, $body);
     $body = str_replace('[TARTALOM]', $content, $body);
-    $result = wp_mail($to, $sub, $body, ['Content-Type: text/html; charset=UTF-8']);
+    $result = wp_mail($to, $sub, $body, [
+        'Content-Type: text/html; charset=UTF-8',
+        'List-Unsubscribe: <' . $unsubscribe_url . '>',
+    ]);
     if (!$result) {
         error_log("ERROR - emailSendGeneral: wp_mail failed for {$to}, subject: {$sub}");
     }
@@ -175,16 +178,15 @@ function buildOrderProductsTable(WC_Order $order): string {
         $name      = $product->get_name();
         $url       = get_permalink($product->get_id());
         $image_id  = $product->get_image_id();
-        $image_url = $image_id
-            ? wp_get_attachment_image_url($image_id, 'thumbnail')
-            : wc_placeholder_img_src('thumbnail');
+        $image_url = ($image_id ? wp_get_attachment_image_url($image_id, 'thumbnail') : false)
+            ?: wc_placeholder_img_src('thumbnail');
+        $alt = str_replace('&quot;', '&#34;', esc_attr(wp_strip_all_tags($name)));
 
         $rows .= '
         <tr>
             <td style="padding:12px; border-bottom:1px solid #eee; width:90px; vertical-align:middle;">
                 <a href="' . esc_url($url) . '" target="_blank">
-                    <img src="' . esc_url($image_url) . '" alt="' . esc_attr($name) . '"
-                         style="width:80px; height:80px; object-fit:cover; border:0; display:block;">
+                    <img src="' . esc_url($image_url) . '" alt="' . $alt . '" style="width:80px; height:80px; object-fit:cover; border:0; display:block;">
                 </a>
             </td>
             <td style="padding:12px; border-bottom:1px solid #eee; vertical-align:middle; font-size:15px; color:#0f172a;">
@@ -250,16 +252,15 @@ function buildTopDiscountedProductsTable(int $limit = 10): string {
         $name      = $product->get_name();
         $url       = get_permalink($product->get_id());
         $image_id  = $product->get_image_id();
-        $image_url = $image_id
-            ? wp_get_attachment_image_url($image_id, 'thumbnail')
-            : wc_placeholder_img_src('thumbnail');
+        $image_url = ($image_id ? wp_get_attachment_image_url($image_id, 'thumbnail') : false)
+            ?: wc_placeholder_img_src('thumbnail');
+        $alt = str_replace('&quot;', '&#34;', esc_attr(wp_strip_all_tags($name)));
 
         $rows .= '
         <tr>
             <td style="padding:12px; border-bottom:1px solid #eee; width:90px; vertical-align:middle;">
                 <a href="' . esc_url($url) . '" target="_blank">
-                    <img src="' . esc_url($image_url) . '" alt="' . esc_attr($name) . '"
-                         style="width:80px; height:80px; object-fit:cover; border:0; display:block;">
+                    <img src="' . esc_url($image_url) . '" alt="' . $alt . '" style="width:80px; height:80px; object-fit:cover; border:0; display:block;">
                 </a>
             </td>
             <td style="padding:12px; border-bottom:1px solid #eee; vertical-align:middle; font-size:15px; color:#0f172a;">
