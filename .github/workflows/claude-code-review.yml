@@ -1,0 +1,62 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+
+jobs:
+  claude-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code Review
+        id: claude-review
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
+          plugins: 'code-review@claude-code-plugins'
+          track_progress: true
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            Review this PR against our team checklist:
+
+            ## Code Quality
+            - [ ] Code follows our style guide
+            - [ ] No commented-out code
+            - [ ] Meaningful variable names
+            - [ ] DRY principle followed
+            - [ ] No potential bugs or issues
+            - [ ] Performance considerations
+
+            ## Documentation
+            - [ ] README updated if needed
+            - [ ] API docs updated (in README file)
+            - [ ] Inline comments for complex logic
+
+            ## Security
+            - [ ] No hardcoded credentials
+            - [ ] Input validation implemented
+            - [ ] Proper error handling
+            - [ ] No sensitive data in logs
+            - [ ] Other security implications
+
+            Rate severity as: CRITICAL, WARNING, SUGGESTION.
+            Provide detailed feedback with recommendations using inline comments for specific issues.
+
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
+          
+
