@@ -54,7 +54,7 @@ Coupon format: `TJS-SUB-XXXXXXXX-YYYYYYYY` (deterministic from SHA-256 of email 
 | `$api_key` | Sendy API key |
 | `$cf_secretKey` | Cloudflare Turnstile secret key |
 
-There is also a hard-coded Google reCAPTCHA v3 secret inside `getGRCResponse()` and a reCAPTCHA v2 secret in `grc.php`; both are unused at runtime.
+There is a legacy reCAPTCHA v2 secret in `grc.php`; it is unused at runtime.
 
 ## Deployment
 

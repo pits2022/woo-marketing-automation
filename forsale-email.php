@@ -13,12 +13,15 @@ $debug = isset($_GET['debug']);
 
 // Build once — same content for every recipient
 $sale_table = buildTopDiscountedProductsTable();
+if ($sale_table === '') {
+    if (!$debug) {
+        die('Nincs akciós termék, nincs mit küldeni.');
+    }
+    error_log('forsale-email: WARNING — no sale products found, debug email will have empty product table.');
+}
 $product_table = $sale_table !== ''
     ? '<p style="margin:0 0 20px 0; font-size:15px; color:#0f172a;">Most kedvező áron vásárolhatsz akciós termékeink közül.</p>' . $sale_table
     : '';
-if ($product_table === '' && !$debug) {
-    die('Nincs akciós termék, nincs mit küldeni.');
-}
 
 // --- Collect orders to process ---
 if ($debug) {
@@ -35,7 +38,7 @@ if ($debug) {
     $ORDERS_TO_PROCESS = wc_get_orders([
         'status'         => 'completed',
         'limit'          => -1,
-        'date_completed' => $target_date,
+        'date_completed' => '<=' . $target_date,
         'meta_query'     => [[
             'key'     => '_forsale_email_sent',
             'compare' => 'NOT EXISTS',
@@ -60,7 +63,11 @@ foreach ($ORDERS_TO_PROCESS as $order) {
     $encoded_list    = base64_encode($SENDY_CUSTOMER_LIST);
     $unsubscribe_url = $sendy_url . '/unsubscribe/' . $encoded_email . '/' . $encoded_list;
 
-    emailSendGeneral($to, $name, $EMAIL_SUBJECT, $product_table, $unsubscribe_url);
+    if (!emailSendGeneral($to, $name, $EMAIL_SUBJECT, $product_table, $unsubscribe_url)) {
+        error_log("forsale-email: wp_mail failed for {$to}, order #{$order->get_id()}");
+        $errors++;
+        continue;
+    }
 
     if (!$debug) {
         $order->update_meta_data('_forsale_email_sent', current_time('mysql'));

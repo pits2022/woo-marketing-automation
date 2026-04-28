@@ -29,7 +29,7 @@ if ($debug) {
     $ORDERS_TO_PROCESS = wc_get_orders([
         'status'         => 'completed',
         'limit'          => -1,
-        'date_completed' => $target_date,
+        'date_completed' => '<=' . $target_date,
         'meta_query'     => [[
             'key'     => '_final_email_sent',
             'compare' => 'NOT EXISTS',
@@ -57,6 +57,11 @@ foreach ($ORDERS_TO_PROCESS as $order) {
     }
 
     $coupon_code = createCC($to, 7);
+    if ($coupon_code === false) {
+        error_log("final-email: coupon creation failed for {$to}, order #{$order->get_id()}");
+        $errors++;
+        continue;
+    }
 
     $encoded_email   = base64_encode($to);
     $encoded_list    = base64_encode($SENDY_CUSTOMER_LIST);
@@ -81,7 +86,11 @@ foreach ($ORDERS_TO_PROCESS as $order) {
     <p style="margin:0; font-size:13px; color:#888;">7 napig érvényes, egyszer használható.</p>
 </div>';
 
-    emailSendGeneral($to, $name, $EMAIL_SUBJECT, $content, $unsubscribe_url);
+    if (!emailSendGeneral($to, $name, $EMAIL_SUBJECT, $content, $unsubscribe_url)) {
+        error_log("final-email: wp_mail failed for {$to}, order #{$order->get_id()}, orphan coupon: {$coupon_code}");
+        $errors++;
+        continue;
+    }
 
     if (!$debug) {
         $order->update_meta_data('_final_email_sent', current_time('mysql'));

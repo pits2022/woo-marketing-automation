@@ -5,6 +5,10 @@ if ($config === false) {
     die('Configuration error.');
 }
 
+if (empty($config['WP_LOAD_PATH']) || !file_exists($config['WP_LOAD_PATH'])) {
+    error_log('FATAL: WP_LOAD_PATH not set or file not found: ' . ($config['WP_LOAD_PATH'] ?? 'not set'));
+    die('Configuration error: WordPress load path missing.');
+}
 require_once($config['WP_LOAD_PATH']);
 
 $sendy_url    = $config['SENDY_URL'];
@@ -14,118 +18,96 @@ $cf_secretKey = $config['CF_SECRET_KEY'];
 $remote_ip    = $_SERVER['REMOTE_ADDR'];
 
 function verifyTurnstileToken($token, $secretKey) {
-	$url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-	$data = [
-        'secret' => $secretKey,
+    $url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+    $data = [
+        'secret'   => $secretKey,
         'response' => $token,
-        'remoteip' => $_SERVER['REMOTE_ADDR']
-	];
-	$options = [
+        'remoteip' => $_SERVER['REMOTE_ADDR'],
+    ];
+    $options = [
         'http' => [
-            'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-            'method' => 'POST',
-            'content' => http_build_query($data)
-        ]
-	];
-	$context = stream_context_create($options);
-    $result = file_get_contents($url, false, $context);
-
+            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+            'method'  => 'POST',
+            'content' => http_build_query($data),
+        ],
+    ];
+    $result = file_get_contents($url, false, stream_context_create($options));
+    if ($result === false) {
+        error_log('ERROR - verifyTurnstileToken: Cloudflare endpoint unreachable.');
+        return ['success' => false, 'error-codes' => ['network-error']];
+    }
     return json_decode($result, true);
 }
 
-function getGRCResponse($token, $remote_ip) {
-    global $config;
-    $secret_key = $config['GRC_SECRET_KEY'];
-    $request_url = 'https://www.google.com/recaptcha/api/siteverify';
-    $request_data = [
-	'secret' => $secret_key,
-	'remoteip' => $remote_ip,
-	'response' => $token
-	];
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $request_url);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $request_data);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response_body = curl_exec($ch);
-    curl_close ($ch);
-    $response_data = json_decode($response_body, true);
-
-    error_log("INFO - getGRCResponse: " . print_r($response_data, true));
-
-    if ($response_data['success']) {
-	if ($response_data['score'] > 0.5) {
-	    return true;
-	}
-    } else {
-	return false;
-    }
-}
-
 function allowedRcpt($email) {
-$allowed_rcpt = array('gmail.com', '.hu', '.de', '.ro', '.com', '.eu');
-$allowed = false;
-
-    foreach ($allowed_rcpt as $rcpt) {
-	$pos = strpos($email, $rcpt);
-	if ($pos !== false) {
-	    $allowed = true;
-	}
+    $allowed_tlds = ['.hu', '.de', '.ro', '.com', '.eu'];
+    $domain = substr(strrchr($email, '@'), 1);
+    if ($domain === false) return false;
+    foreach ($allowed_tlds as $tld) {
+        if (str_ends_with($domain, $tld)) return true;
     }
-return $allowed;
+    return false;
 }
 
-function emailSend($to, $name, $cc) {
+function emailSend($to, $name, $cc): bool {
     global $config;
     $subject = 'Köszönjük a feliratkozást!';
     $body = file_get_contents($config['SENDY_DIR'] . '/email.tpl');
-    if ($name != "") {
-	$body = str_replace('___NAME___', "Kedves $name!", $body);
-    } else {
-	$body = str_replace('___NAME___', "", $body);
+    if ($body === false) {
+        error_log("ERROR - emailSend: Could not read email.tpl from {$config['SENDY_DIR']}");
+        return false;
     }
+    $greeting = $name != '' ? 'Kedves ' . esc_html($name) . '!' : '';
+    $body = str_replace('___NAME___', $greeting, $body);
     $body = str_replace('___CODE___', $cc, $body);
-    $headers = array('Content-Type: text/html; charset=UTF-8');
-    wp_mail($to, $subject, $body, $headers);
+    $result = wp_mail($to, $subject, $body, ['Content-Type: text/html; charset=UTF-8']);
+    if (!$result) {
+        error_log("ERROR - emailSend: wp_mail failed for {$to}");
+    }
+    return $result;
 }
 
-function emailSendGeneral($to, $name, $sub, $content, $unsubscribe_url) {
+function emailSendGeneral($to, $name, $sub, $content, $unsubscribe_url): bool {
     global $config;
-    $subject = $sub;
     $body = file_get_contents($config['SENDY_DIR'] . '/hirlevel.tpl');
-    if ($name != "") {
-	$body = str_replace('___NAME___', "Kedves $name!", $body);
-    } else {
-	$body = str_replace('___NAME___', "", $body);
+    if ($body === false) {
+        error_log("ERROR - emailSendGeneral: Could not read hirlevel.tpl from {$config['SENDY_DIR']}");
+        return false;
     }
+    $greeting = $name != '' ? 'Kedves ' . esc_html($name) . '!' : '';
+    $body = str_replace('___NAME___', $greeting, $body);
     $body = str_replace('__UNSUBSCRIBE_URL__', $unsubscribe_url, $body);
     $body = str_replace('[TARTALOM]', $content, $body);
-    $headers = array('Content-Type: text/html; charset=UTF-8');
-    wp_mail($to, $subject, $body, $headers);
+    $result = wp_mail($to, $sub, $body, ['Content-Type: text/html; charset=UTF-8']);
+    if (!$result) {
+        error_log("ERROR - emailSendGeneral: wp_mail failed for {$to}, subject: {$sub}");
+    }
+    return $result;
 }
 
 function createCC($email, $expiry = 30) {
     $date = date('Y-m-d');
     $cc = str_split(strtoupper(base64_encode(hash('sha256', $email . $date))), 8);
     $coupon_code = 'WMA-SUB-' . $cc[0] . '-' . $cc[1];
-    $amount = '10';
-    $discount_type = 'percent';
 
     $expiry_date = date('Y-m-d', strtotime($date . '+ ' . $expiry . ' days'));
 
-    $coupon = array(
-	'post_title'	=> $coupon_code,
-	'post_content'	=> '',
-	'post_status'	=> 'publish',
-	'post_author'	=> 1,
-	'post_type'	=> 'shop_coupon'
-    );
+    $new_coupon_id = wp_insert_post([
+        'post_title'   => $coupon_code,
+        'post_content' => '',
+        'post_status'  => 'publish',
+        'post_author'  => 1,
+        'post_type'    => 'shop_coupon',
+    ]);
 
-    $new_coupon_id = wp_insert_post($coupon);
+    if (!$new_coupon_id || is_wp_error($new_coupon_id)) {
+        $msg = is_wp_error($new_coupon_id) ? $new_coupon_id->get_error_message() : 'returned 0';
+        error_log("ERROR - createCC: wp_insert_post failed for {$email}: {$msg}");
+        return false;
+    }
 
-    update_post_meta($new_coupon_id, 'discount_type', $discount_type);
-    update_post_meta($new_coupon_id, 'coupon_amount', $amount);
+    update_post_meta($new_coupon_id, 'discount_type', 'percent');
+    update_post_meta($new_coupon_id, 'coupon_amount', '10');
     update_post_meta($new_coupon_id, 'individual_use', 'yes');
     update_post_meta($new_coupon_id, 'product_ids', '');
     update_post_meta($new_coupon_id, 'exclude_product_ids', '');
@@ -140,10 +122,14 @@ function createCC($email, $expiry = 30) {
 
 function sendCC($email, $name = '') {
     if (allowedRcpt($email)) {
-	$cc = createCC($email);
-	emailSend($email, $name, $cc);
+        $cc = createCC($email);
+        if ($cc === false) {
+            error_log("ERROR - sendCC: coupon creation failed for {$email}");
+            return;
+        }
+        emailSend($email, $name, $cc);
     } else {
-	error_log("ERROR - sendCC: $email NOT allowed recipient!");
+        error_log("ERROR - sendCC: {$email} NOT allowed recipient!");
     }
 }
 
@@ -154,15 +140,19 @@ function createCCFreeShipment($email) {
 
     $expiry_date = date('Y-m-d', strtotime($date . '+ 7 days'));
 
-    $coupon = array(
-	'post_title'   => $coupon_code,
-	'post_content' => '',
-	'post_status'  => 'publish',
-	'post_author'  => 1,
-	'post_type'    => 'shop_coupon'
-    );
+    $new_coupon_id = wp_insert_post([
+        'post_title'   => $coupon_code,
+        'post_content' => '',
+        'post_status'  => 'publish',
+        'post_author'  => 1,
+        'post_type'    => 'shop_coupon',
+    ]);
 
-    $new_coupon_id = wp_insert_post($coupon);
+    if (!$new_coupon_id || is_wp_error($new_coupon_id)) {
+        $msg = is_wp_error($new_coupon_id) ? $new_coupon_id->get_error_message() : 'returned 0';
+        error_log("ERROR - createCCFreeShipment: wp_insert_post failed for {$email}: {$msg}");
+        return false;
+    }
 
     update_post_meta($new_coupon_id, 'discount_type', 'fixed_cart');
     update_post_meta($new_coupon_id, 'coupon_amount', '0');
@@ -297,10 +287,15 @@ function buildTopDiscountedProductsTable(int $limit = 10): string {
 
 function isSendySubscribed(string $email, string $list, string $sendy_url, string $api_key): bool {
     $opts = ['http' => [
-        'method'  => 'POST',
-        'header'  => 'Content-type: application/x-www-form-urlencoded',
-        'content' => http_build_query(['api_key' => $api_key, 'list_id' => $list, 'email' => $email]),
+        'method'        => 'POST',
+        'header'        => 'Content-type: application/x-www-form-urlencoded',
+        'content'       => http_build_query(['api_key' => $api_key, 'list_id' => $list, 'email' => $email]),
+        'ignore_errors' => true,
     ]];
-    $result = @file_get_contents($sendy_url . '/api/subscribers/subscription-status.php', false, stream_context_create($opts));
+    $result = file_get_contents($sendy_url . '/api/subscribers/subscription-status.php', false, stream_context_create($opts));
+    if ($result === false) {
+        error_log("ERROR - isSendySubscribed: HTTP request failed for {$email} against {$sendy_url}");
+        return false;
+    }
     return $result === 'Subscribed';
 }

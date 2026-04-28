@@ -77,7 +77,7 @@ if ($debug) {
     $ORDERS_TO_PROCESS = wc_get_orders([
         'status'         => 'completed',
         'limit'          => -1,
-        'date_completed' => $target_date,
+        'date_completed' => '<=' . $target_date,
         'meta_query'     => [[
             'key'     => '_review_email_sent',
             'compare' => 'NOT EXISTS',
@@ -107,7 +107,11 @@ foreach ($ORDERS_TO_PROCESS as $order) {
         continue;
     }
 
-    emailSendGeneral($to, $name, $EMAIL_SUBJECT, $content, $unsubscribe_url);
+    if (!emailSendGeneral($to, $name, $EMAIL_SUBJECT, $content, $unsubscribe_url)) {
+        error_log("review-email: wp_mail failed for {$to}, order #{$order->get_id()}");
+        $errors++;
+        continue;
+    }
 
     if (!$debug) {
         $order->update_meta_data('_review_email_sent', current_time('mysql'));

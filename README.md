@@ -42,7 +42,6 @@ cp .env.example .env
 | `SENDY_CUSTOMER_LIST` | Sendy list ID for subscription checks (`review-email.php`, `refill-email.php`, `forsale-email.php`) |
 | `SENDY_API_KEY` | Sendy API key |
 | `CF_SECRET_KEY` | Cloudflare Turnstile server-side secret key |
-| `GRC_SECRET_KEY` | Google reCAPTCHA secret key (legacy, unused at runtime) |
 | `DEBUG_ORDER_ID` | Order ID for debug mode (`review-email.php`, `refill-email.php`, `forsale-email.php`) |
 | `DEBUG_EMAIL` | Recipient address for debug mode emails |
 
