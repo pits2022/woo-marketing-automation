@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Purpose
 
-Small PHP/jQuery integration layer for the **termeszetesenjo.hu** WooCommerce webshop. It handles newsletter signup forms, validates submissions against Cloudflare Turnstile CAPTCHA, subscribes users to a self-hosted [Sendy](https://sendy.co/) instance at `hirlevel.acinfo.hu`, and automatically generates a 10% WooCommerce coupon code sent via email.
+Small PHP/jQuery integration layer for a WooCommerce webshop. It handles newsletter signup forms, validates submissions against Cloudflare Turnstile CAPTCHA, subscribes users to a self-hosted [Sendy](https://sendy.co/) instance, and automatically generates a 10% WooCommerce coupon code sent via email.
 
 Deployed to `/var/www/html/sendy/` inside a WordPress installation.
 
