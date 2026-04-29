@@ -5,7 +5,7 @@
  * Description: Automated marketing emails and Sendy newsletter subscription for WooCommerce.
  * Version:     1.0.0
  * Requires at least: 6.9
- * Requires PHP: 8.5
+ * Requires PHP: 8.1
  * Author:      Professional IT Services
  * Author URI:  https://www.professional-it-services.com/
  * License:     GPL-2.0-or-later
