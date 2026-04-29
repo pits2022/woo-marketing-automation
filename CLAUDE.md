@@ -4,62 +4,64 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Purpose
 
-Small PHP/jQuery integration layer for a WooCommerce webshop. It handles newsletter signup forms, validates submissions against Cloudflare Turnstile CAPTCHA, subscribes users to a self-hosted [Sendy](https://sendy.co/) instance, and automatically generates a 10% WooCommerce coupon code sent via email.
-
-Deployed to `/var/www/html/sendy/` inside a WordPress installation.
+WordPress plugin that automates post-purchase email sequences and Sendy newsletter signups for WooCommerce stores.
 
 ## Architecture
 
-### Request flow (main form)
+```
+woo-marketing-automation/
+├── woo-marketing-automation.php   — plugin bootstrap, hooks registration
+├── uninstall.php                  — cleanup on uninstall
+├── includes/
+│   ├── class-wma-activator.php    — activation/deactivation, default settings
+│   ├── class-wma-settings.php     — dot-notation settings accessor, reactivation email CRUD
+│   ├── class-wma-logger.php       — timestamped log to wp-content/wma-debug.log
+│   ├── class-wma-sendy.php        — Sendy subscribe/status API calls
+│   ├── class-wma-coupon.php       — WooCommerce coupon creation (percent, free shipping)
+│   ├── class-wma-email.php        — HTML email sender, product table builders
+│   ├── class-wma-shortcode.php    — [wma-sendy] shortcode + AJAX subscribe handler
+│   ├── class-wma-customer-lists.php — order completion hook, Sendy list segmentation
+│   ├── class-wma-cron.php         — daily cron, reactivation email dispatch
+│   └── class-wma-admin.php        — WooCommerce submenu, 5-tab settings UI
+├── assets/
+│   ├── css/wma-admin.css          — admin badge styles
+│   ├── css/wma-frontend.css       — signup form styles
+│   └── js/wma-signup.js           — form AJAX submission with Turnstile support
+└── languages/
+    ├── woo-marketing-automation-en_US.po
+    └── woo-marketing-automation-hu_HU.po
+```
 
-1. Browser loads `signup.js` which binds to `#signup_form`
-2. Cloudflare Turnstile calls `getToken(token)` → `signup.js` submits the form via jQuery `$.post`
-3. `signup.php` receives the POST, calls `functions.php` for:
-   - `verifyTurnstileToken()` — Cloudflare Turnstile server-side check
-   - `allowedRcpt()` — domain allowlist filter
-   - Sendy subscribe API call (`$sendy_url/subscribe`)
-   - `sendCC()` → `createCC()` + `emailSend()` — WooCommerce coupon generation and delivery
-4. Sendy list used: default list in `$list`; switches to the raffle list when `nyeremenyjatek=1` is posted (no coupon sent for raffle entries)
+### Key flows
 
-### Popup/embed form
+**Newsletter signup** (`[wma-sendy]` shortcode):
+1. Form rendered by `WMA_Shortcode::render()` with Cloudflare Turnstile if configured
+2. `wma-signup.js` submits via AJAX to `wp_ajax_wma_subscribe`
+3. `WMA_Shortcode::ajax_subscribe()` validates nonce + CAPTCHA, queues async Sendy subscribe, sends welcome email with optional coupon
 
-`signup-embed.js` handles `#signup_form_pop` — a simpler variant with no Turnstile and no raffle support. Posts directly to the same `signup.php`.
+**Customer list segmentation** (on order completion):
+1. `WMA_Customer_Lists` hooks `woocommerce_order_status_completed`
+2. Schedules `wma_process_customer_lists` single event
+3. Subscribes to customers list; VIP list if total ≥ threshold; returning list if prior completed order exists
 
-### Key files
+**Reactivation emails** (daily cron `wma_daily_cron`):
+1. `WMA_Cron::run_daily()` loops enabled reactivation email configs
+2. Queries completed orders from exactly `wait_period` days ago that haven't received this email
+3. Skips orders where billing email is not subscribed to the customers list
+4. Builds email data (ordered products, on-sale products, coupons) and sends via `WMA_Email::send()`
+5. Sets order meta `_wma_email_{id}_sent` to prevent duplicate sends
 
-| File | Role |
-|------|------|
-| `functions.php` | Config constants + all PHP functions; loaded by `signup.php` via `require` |
-| `signup.php` | POST endpoint — CAPTCHA → allowlist → Sendy → coupon |
-| `signup.js` | jQuery handler for the main form (`#signup_form`), includes Turnstile callback |
-| `signup-embed.js` | jQuery handler for the popup form (`#signup_form_pop`) |
-| `email.tpl` | HTML email sent on signup; placeholders `___NAME___` and `___CODE___` |
-| `hirlevel.tpl` | General newsletter wrapper template; placeholder `[TARTALOM]` |
-| `grc.php` | Legacy standalone reCAPTCHA v2 endpoint — no longer wired up |
+### Settings storage
 
-### WordPress / WooCommerce integration
+All settings in a single WordPress option `wma_settings` (array). Access via `WMA_Settings::get('dot.notation.key')`.
 
-`functions.php` bootstraps WordPress via `require('/var/www/html/wp-load.php')` so it can use:
-- `wp_mail()` for sending emails
-- `wp_insert_post()` + `update_post_meta()` for creating `shop_coupon` posts (WooCommerce coupons)
+### Email template placeholders
 
-Coupon format: `TJS-SUB-XXXXXXXX-YYYYYYYY` (deterministic from SHA-256 of email + date), 10% off, expires in 30 days, `exclude_sale_items=yes`, single-use.
+`[WMA_MESSAGE]`, `[WMA_REVIEW_PRODUCTS]`, `[WMA_DISCOUNT_PRODUCTS]`, `[WMA_COUPON_CODE_PERCENT]`, `[WMA_COUPON_CODE_FREESHIPMENT]`, `[WMA_UNSUBSCRIBE_URL]`
 
-## Configuration (in `functions.php`)
+## Development notes
 
-| Variable | What it is |
-|----------|------------|
-| `$sendy_url` | Sendy instance base URL |
-| `$list` | Default Sendy list ID |
-| `$api_key` | Sendy API key |
-| `$cf_secretKey` | Cloudflare Turnstile secret key |
-
-There is a legacy reCAPTCHA v2 secret in `grc.php`; it is unused at runtime.
-
-## Deployment
-
-No build step. Files are served directly by the WordPress/Apache stack. Copy changed files to `/var/www/html/sendy/` on the server. PHP errors go to the web server error log (`error_log()` is used throughout for debugging).
-
-## Documentation
-
-After every code change update `README.md` if necessary.
+- Text domain: `woo-marketing-automation`
+- All admin actions protected by `check_admin_referer()` and `current_user_can('manage_woocommerce')`
+- Coupon codes are deterministic: SHA-256 of `email + date + wp_salt()`, formatted as `WMA-XXXXXXXX-YYYYYYYY`
+- After every code change update `README.md` if necessary

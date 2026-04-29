@@ -1,71 +1,99 @@
-# woo-marketing-automation
+# WooCommerce Marketing Automation
 
-PHP/jQuery integration layer for a WooCommerce webshop.
+A WordPress plugin that automates post-purchase email sequences and Sendy newsletter signups for WooCommerce stores.
 
-Handles newsletter signups with Cloudflare Turnstile CAPTCHA, subscribes users to a self-hosted [Sendy](https://sendy.co/) instance, generates a 10% WooCommerce coupon, and sends post-purchase review request emails.
+## Features
 
-## Architecture
+- **Customer list segmentation** — automatically adds customers to Sendy lists (all customers, VIP by order amount, returning customers) when an order is completed
+- **Welcome email** — sends a welcome email with an optional percentage-off coupon when someone subscribes via the signup form
+- **Reactivation email sequences** — configurable series of post-purchase emails triggered by order completion date; supports ordered product tables, on-sale product tables, percentage-off coupons, and free shipping coupons
+- **Global email template** — one HTML template used by all outgoing emails, editable from the admin UI
+- **Signup shortcode** — `[wma-sendy]` renders a subscription form with optional Cloudflare Turnstile CAPTCHA
+- **Multilingual** — ships with English and Hungarian translations
 
-| File | Role |
-|------|------|
-| `functions.php` | Loads `.env` config + all shared PHP functions; required by all other scripts |
-| `signup.php` | POST endpoint: CAPTCHA → allowlist → Sendy subscribe → coupon email |
-| `signup.js` | jQuery handler for the main signup form (`#signup_form`), includes Turnstile callback; redirect URL read from form's `data-redirect` attribute |
-| `signup-embed.js` | jQuery handler for the popup/embed form (`#signup_form_pop`) |
-| `review-email.php` | Cron-triggered script: sends review request emails 7 days after order completion |
-| `refill-email.php` | Cron-triggered script: sends refill reminder + free shipping coupon 30 days after order completion |
-| `forsale-email.php` | Cron-triggered script: sends top 10 discounted products (by discount %) 60 days after order completion |
-| `final-email.php` | Cron-triggered script: sends past order + top discounts + 10% coupon (7-day) 90 days after order completion |
-| `email.tpl` | HTML email template for signup coupon; placeholders `___NAME___` and `___CODE___` |
-| `hirlevel.tpl` | Newsletter wrapper template; placeholder `[TARTALOM]` |
+## Requirements
+
+- WordPress 6.9+
+- WooCommerce 10.7.0+
+- PHP 8.5+
+- A [Sendy](https://sendy.co/) installation
+
+## Installation
+
+1. Upload the `woo-marketing-automation` folder to `/wp-content/plugins/`
+2. Activate the plugin through **Plugins** in WordPress admin
+3. Go to **WooCommerce → Marketing Automation** and configure your Sendy URL and API key
 
 ## Configuration
 
-All secrets and environment-specific values are stored in a `.env` file (not committed to git).
+### Sendy tab
 
-### Setup
+| Field | Description |
+|-------|-------------|
+| Sendy URL | Base URL of your Sendy installation |
+| Sendy API Key | Your Sendy API key |
+| Cloudflare Turnstile Site Key | Optional; enables CAPTCHA on subscription forms |
+| Cloudflare Turnstile Secret Key | Optional; used for server-side CAPTCHA verification |
 
-```bash
-cp .env.example .env
-# Edit .env and fill in all values
+### Customer Lists tab
+
+| Field | Description |
+|-------|-------------|
+| Customers List ID | Every customer is added here on order completion |
+| VIP Customers List ID | Added when order total ≥ VIP minimum amount |
+| VIP Minimum Order Amount | Threshold for VIP classification |
+| Returning Customers List ID | Added when the customer has a previous completed order |
+
+### Welcome Email tab
+
+Subject and message for the email sent after a successful subscription via the `[wma-sendy]` shortcode.
+
+### Email Template tab
+
+Global HTML template used by all outgoing emails. Available placeholders:
+
+| Shortcode | Rendered when |
+|-----------|---------------|
+| `[WMA_MESSAGE]` | Always |
+| `[WMA_REVIEW_PRODUCTS]` | "Include ordered products table" is checked on the reactivation email |
+| `[WMA_DISCOUNT_PRODUCTS]` | Top sale products count > 0 |
+| `[WMA_COUPON_CODE_PERCENT]` | Coupon percent > 0 |
+| `[WMA_COUPON_CODE_FREESHIPMENT]` | Free shipping expiry days > 0 |
+| `[WMA_UNSUBSCRIBE_URL]` | Always |
+
+### Reactivation Emails tab
+
+Add, edit, enable/disable, and delete reactivation email entries. Each email defines:
+
+- **Wait period** — days after order completion before sending
+- **Email subject and message**
+- **Ordered products table** — include the items from the triggering order
+- **Top discounted products** — include the N most-discounted currently on-sale products
+- **Percentage-off coupon** — discount % and expiry in days
+- **Free shipping coupon** — expiry in days (0 = disabled)
+
+Reactivation emails are sent once per order per email type; a WooCommerce order meta flag prevents duplicates.
+
+## Shortcode
+
+```
+[wma-sendy list="YOUR_LIST_ID"]
+[wma-sendy list="YOUR_LIST_ID" redirect="https://example.com/thank-you"]
+[wma-sendy list="YOUR_LIST_ID" coupon_percent="10" coupon_expiry="30"]
 ```
 
-### `.env` keys
+| Attribute | Default | Description |
+|-----------|---------|-------------|
+| `list` | _(required)_ | Sendy list ID to subscribe to |
+| `id` | `wma-form` | HTML element ID prefix (must be unique per page) |
+| `redirect` | _(none)_ | URL to redirect to after successful subscription |
+| `coupon_percent` | `0` | Percentage discount sent in the welcome email (0 = disabled) |
+| `coupon_expiry` | `30` | Coupon validity in days |
 
-| Key | Description |
-|-----|-------------|
-| `WP_LOAD_PATH` | Absolute path to `wp-load.php` on the server |
-| `SENDY_DIR` | Absolute path to the `sendy/` deployment directory |
-| `SENDY_URL` | Base URL of the Sendy instance |
-| `SENDY_LIST` | Default Sendy list ID (newsletter signups) |
-| `SENDY_RAFFLE_LIST` | Sendy list ID for raffle/nyereményjáték signups |
-| `SENDY_CUSTOMER_LIST` | Sendy list ID for subscription checks (`review-email.php`, `refill-email.php`, `forsale-email.php`) |
-| `SENDY_API_KEY` | Sendy API key |
-| `CF_SECRET_KEY` | Cloudflare Turnstile server-side secret key |
-| `DEBUG_ORDER_ID` | Order ID for debug mode (`review-email.php`, `refill-email.php`, `forsale-email.php`) |
-| `DEBUG_EMAIL` | Recipient address for debug mode emails |
+## Logging
 
-The config is loaded in `functions.php` via:
+Debug output is written to `wp-content/wma-debug.log`.
 
-```php
-$config = parse_ini_file(__DIR__ . '/.env');
-```
+## License
 
-## Deployment
-
-No build step. Copy changed files to `_WEBROOT_/sendy/` on the server, and ensure `.env` exists there with production values.
-
-```bash
-rsync -av --exclude='.env' --exclude='.git' ./ user@server:_WEBROOT_/sendy/
-```
-
-PHP errors are written to the web server error log via `error_log()`.
-
-## Request flow (main signup form)
-
-1. Browser loads `signup.js`, binds to `#signup_form`
-2. Cloudflare Turnstile calls `getToken(token)` → `signup.js` submits via jQuery `$.post`
-3. `signup.php` verifies the token, checks the email allowlist, calls the Sendy subscribe API
-4. On successful subscribe (and no raffle flag): generates a WooCommerce coupon and sends it via `wp_mail()`
-
-Coupon format: `WMA-SUB-XXXXXXXX-YYYYYYYY` (SHA-256 of email + date), 10% off, 30-day expiry, single-use, excludes sale items.
+GPL-2.0-or-later — see [LICENSE](LICENSE).

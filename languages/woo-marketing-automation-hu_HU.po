@@ -1,0 +1,265 @@
+# WooCommerce Marketing Automation — Hungarian (Hungary)
+# Copyright (C) 2026 Professional IT Services
+# This file is distributed under the GPL-2.0-or-later license.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Marketing Automation 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/pits2022/woo-marketing-automation/issues\n"
+"POT-Creation-Date: 2026-04-29 12:00+0200\n"
+"Language: hu_HU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Manual\n"
+
+msgid "WooCommerce Marketing Automation requires WooCommerce 10.7.0 or higher."
+msgstr "A WooCommerce Marketing Automation legalább WooCommerce 10.7.0 verziót igényel."
+
+msgid "Marketing Automation"
+msgstr "Marketing Automatizáció"
+
+msgid "Sendy"
+msgstr "Sendy"
+
+msgid "Customer Lists"
+msgstr "Ügyfélisták"
+
+msgid "Welcome Email"
+msgstr "Üdvözlő e-mail"
+
+msgid "Email Template"
+msgstr "E-mail sablon"
+
+msgid "Reactivation Emails"
+msgstr "Reaktivációs e-mailek"
+
+msgid "Settings saved."
+msgstr "Beállítások mentve."
+
+msgid "Unauthorized."
+msgstr "Nincs jogosultsága."
+
+msgid "Sendy URL"
+msgstr "Sendy URL"
+
+msgid "Base URL of your Sendy installation, e.g. https://sendy.example.com"
+msgstr "A Sendy telepítés alap URL-je, pl. https://sendy.example.com"
+
+msgid "Sendy API Key"
+msgstr "Sendy API kulcs"
+
+msgid "Cloudflare Turnstile Site Key"
+msgstr "Cloudflare Turnstile webhelyi kulcs"
+
+msgid "Optional. Renders the CAPTCHA widget in subscription forms."
+msgstr "Opcionális. Megjeleníti a CAPTCHA widgetet a feliratkozási űrlapokon."
+
+msgid "Cloudflare Turnstile Secret Key"
+msgstr "Cloudflare Turnstile titkos kulcs"
+
+msgid "Optional. Used for server-side CAPTCHA verification."
+msgstr "Opcionális. Szerver oldali CAPTCHA ellenőrzéshez szükséges."
+
+msgid "Save Settings"
+msgstr "Beállítások mentése"
+
+msgid "Customers List ID"
+msgstr "Ügyféllista azonosító"
+
+msgid "Every customer is added to this Sendy list on order completion."
+msgstr "Minden vásárló felkerül erre a Sendy listára a rendelés teljesítésekor."
+
+msgid "VIP Customers List ID"
+msgstr "VIP ügyféllista azonosító"
+
+msgid "VIP Minimum Order Amount"
+msgstr "VIP minimális rendelési összeg"
+
+msgid "Orders at or above this total qualify for the VIP list."
+msgstr "Az ezt az összeget elérő vagy meghaladó rendelések VIP-nek számítanak."
+
+msgid "Returning Customers List ID"
+msgstr "Visszatérő ügyféllista azonosító"
+
+msgid "Customers with a previous completed order are added here too."
+msgstr "A korábbi teljesített rendeléssel rendelkező ügyfelek ide is felkerülnek."
+
+msgid "Email Subject"
+msgstr "E-mail tárgy"
+
+msgid "Email Message"
+msgstr "E-mail üzenet"
+
+msgid "Injected into [WMA_MESSAGE]. Use [WMA_COUPON_CODE_PERCENT] to display the coupon code sent via the shortcode parameter."
+msgstr "Behelyettesítődik a [WMA_MESSAGE] helyére. Használja a [WMA_COUPON_CODE_PERCENT] kódot a kuponkód megjelenítéséhez."
+
+msgid "Global HTML email template used by all outgoing emails. Available shortcodes:"
+msgstr "Globális HTML e-mail sablon, amelyet minden kimenő e-mail használ. Elérhető shortcode-ok:"
+
+msgid "Per-email message text (always rendered)"
+msgstr "E-mailenkénti szöveg (mindig megjelenik)"
+
+msgid "Ordered products table (when enabled on the reactivation email)"
+msgstr "Megrendelt termékek táblázata (ha engedélyezve van a reaktivációs e-mailnél)"
+
+msgid "Top discounted products table (when top_sale_products > 0)"
+msgstr "Legjobb akciós termékek táblázata (ha top_sale_products > 0)"
+
+msgid "Percentage discount coupon (when coupon_percent > 0)"
+msgstr "Százalékos kedvezmény kupon (ha coupon_percent > 0)"
+
+msgid "Free shipping coupon (when coupon_expiry_freeship > 0)"
+msgstr "Ingyenes szállítás kupon (ha coupon_expiry_freeship > 0)"
+
+msgid "Unsubscribe link URL"
+msgstr "Leiratkozási link URL"
+
+msgid "Save Template"
+msgstr "Sablon mentése"
+
+msgid "+ Add Reactivation Email"
+msgstr "+ Reaktivációs e-mail hozzáadása"
+
+msgid "Name"
+msgstr "Név"
+
+msgid "Wait Period"
+msgstr "Várakozási idő"
+
+msgid "Content"
+msgstr "Tartalom"
+
+msgid "Status"
+msgstr "Státusz"
+
+msgid "Actions"
+msgstr "Műveletek"
+
+msgid "No reactivation emails configured yet."
+msgstr "Még nincs reaktivációs e-mail beállítva."
+
+msgid "%d days"
+msgstr "%d nap"
+
+msgid "Active"
+msgstr "Aktív"
+
+msgid "Inactive"
+msgstr "Inaktív"
+
+msgid "Edit"
+msgstr "Szerkesztés"
+
+msgid "Disable"
+msgstr "Letiltás"
+
+msgid "Enable"
+msgstr "Engedélyezés"
+
+msgid "Delete"
+msgstr "Törlés"
+
+msgid "Delete this reactivation email?"
+msgstr "Törli ezt a reaktivációs e-mailt?"
+
+msgid "Edit Reactivation Email"
+msgstr "Reaktivációs e-mail szerkesztése"
+
+msgid "Add Reactivation Email"
+msgstr "Reaktivációs e-mail hozzáadása"
+
+msgid "Reactivation email not found."
+msgstr "A reaktivációs e-mail nem található."
+
+msgid "Wait Period (days)"
+msgstr "Várakozási idő (napokban)"
+
+msgid "Days after order completion before sending this email."
+msgstr "Hány nappal a rendelés teljesítése után küldje el az e-mailt."
+
+msgid "Injected into [WMA_MESSAGE] in the global template."
+msgstr "A globális sablonban a [WMA_MESSAGE] helyére kerül."
+
+msgid "[WMA_REVIEW_PRODUCTS]"
+msgstr "[WMA_REVIEW_PRODUCTS]"
+
+msgid "Include ordered products table"
+msgstr "Megrendelt termékek táblázatának megjelenítése"
+
+msgid "[WMA_DISCOUNT_PRODUCTS]"
+msgstr "[WMA_DISCOUNT_PRODUCTS]"
+
+msgid "Number of top discounted products:"
+msgstr "Legjobb akciós termékek száma:"
+
+msgid "0 = disabled (shortcode stripped)"
+msgstr "0 = kikapcsolva (shortcode eltávolítva)"
+
+msgid "[WMA_COUPON_CODE_PERCENT]"
+msgstr "[WMA_COUPON_CODE_PERCENT]"
+
+msgid "Discount %:"
+msgstr "Kedvezmény %:"
+
+msgid "Expiry (days):"
+msgstr "Lejárat (napban):"
+
+msgid "0% = disabled."
+msgstr "0% = kikapcsolva."
+
+msgid "[WMA_COUPON_CODE_FREESHIPMENT]"
+msgstr "[WMA_COUPON_CODE_FREESHIPMENT]"
+
+msgid "0 = disabled."
+msgstr "0 = kikapcsolva."
+
+msgid "Save Email"
+msgstr "E-mail mentése"
+
+msgid "Cancel"
+msgstr "Mégse"
+
+msgid "Your coupon code:"
+msgstr "A kuponkódja:"
+
+msgid "Product"
+msgstr "Termék"
+
+msgid "Qty"
+msgstr "Db"
+
+msgid "Regular"
+msgstr "Normál ár"
+
+msgid "Sale"
+msgstr "Akciós ár"
+
+msgid "Discount"
+msgstr "Kedvezmény"
+
+msgid "Email address"
+msgstr "E-mail cím"
+
+msgid "Your name"
+msgstr "Neve"
+
+msgid "your@email.com"
+msgstr "email@cim.hu"
+
+msgid "Subscribe"
+msgstr "Feliratkozás"
+
+msgid "Thank you! You are now subscribed."
+msgstr "Köszönjük! Sikeresen feliratkozott."
+
+msgid "Invalid request."
+msgstr "Érvénytelen kérés."
+
+msgid "Please enter a valid email address."
+msgstr "Kérjük, adjon meg érvényes e-mail címet."
+
+msgid "CAPTCHA verification failed. Please try again."
+msgstr "A CAPTCHA ellenőrzés sikertelen. Kérjük, próbálja újra."
+
+msgid "An error occurred. Please try again."
+msgstr "Hiba történt. Kérjük, próbálja újra."
