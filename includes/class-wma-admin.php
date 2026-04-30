@@ -242,16 +242,22 @@ class WMA_Admin {
 	private static function tab_email_template(): void {
 		$html = WMA_Settings::get( 'email_template.html' ) ?? '';
 		?>
-		<div style="background:#fff;border:1px solid #ccd0d4;padding:15px;margin-bottom:20px;">
-			<h3 style="margin-top:0;"><?php esc_html_e( 'Test Email Template', 'woo-marketing-automation' ); ?></h3>
-			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-				<input type="hidden" name="action" value="wma_test_email">
-				<?php wp_nonce_field( 'wma_test_email', 'wma_nonce' ); ?>
-				<label for="wma_test_email_address"><?php esc_html_e( 'Email Address:', 'woo-marketing-automation' ); ?></label>
-				<input type="email" id="wma_test_email_address" name="test_email_address" required class="regular-text" placeholder="you@example.com">
-				<?php submit_button( __( 'Send Test Email', 'woo-marketing-automation' ), 'secondary', 'submit', false ); ?>
-				<p class="description"><?php esc_html_e( 'This will send a test email using the currently saved template. Fake coupon codes will be used.', 'woo-marketing-automation' ); ?></p>
-			</form>
+		<div class="postbox wma-test-email-box">
+			<h2 class="hndle"><span><?php esc_html_e( 'Test Email Template', 'woo-marketing-automation' ); ?></span></h2>
+			<div class="inside">
+				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+					<input type="hidden" name="action" value="wma_test_email">
+					<?php wp_nonce_field( 'wma_test_email', 'wma_nonce' ); ?>
+					<p>
+						<label for="wma_test_email_address"><strong><?php esc_html_e( 'Email Address:', 'woo-marketing-automation' ); ?></strong></label><br>
+						<input type="email" id="wma_test_email_address" name="test_email_address" required class="regular-text" placeholder="you@example.com">
+					</p>
+					<p>
+						<?php submit_button( __( 'Send Test Email', 'woo-marketing-automation' ), 'secondary', 'submit', false ); ?>
+					</p>
+					<p class="description"><?php esc_html_e( 'This will send a test email using the currently saved template. Fake coupon codes will be used.', 'woo-marketing-automation' ); ?></p>
+				</form>
+			</div>
 		</div>
 		<?php
 		self::form_open( 'email-template' );
