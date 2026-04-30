@@ -61,7 +61,8 @@ class WMA_Admin {
 		<div class="notice notice-error is-dismissible">
 			<p>
 				<?php 
-				if ( $_GET['test-email-error'] === '1' ) {
+				$error_code = sanitize_text_field( wp_unslash( $_GET['test-email-error'] ) );
+				if ( $error_code === '1' ) {
 					esc_html_e( 'Please provide a valid email address.', 'woo-marketing-automation' );
 				} else {
 					esc_html_e( 'Failed to send test email. Please check your server email configuration or the debug log.', 'woo-marketing-automation' );
