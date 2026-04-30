@@ -38,7 +38,8 @@ class WMA_Cron {
 				'paged'          => $page,
 				'status'         => 'completed',
 				'date_completed' => $target . '...' . $target,
-				'meta_query'     => [ [ 'key' => $meta_key, 'compare' => 'NOT EXISTS' ] ],
+				'meta_key'       => $meta_key,
+				'meta_compare'   => 'NOT EXISTS',
 			] );
 
 			if ( empty( $orders ) ) {
