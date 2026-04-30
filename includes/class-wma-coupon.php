@@ -25,10 +25,14 @@ class WMA_Coupon {
 			'post_title'  => $code,
 			'post_type'   => 'shop_coupon',
 			'post_status' => 'publish',
-		] );
+		], true );
 
 		if ( is_wp_error( $coupon_id ) ) {
 			WMA_Logger::log( 'Coupon creation failed: ' . $coupon_id->get_error_message(), 'ERROR' );
+			return false;
+		}
+		if ( ! $coupon_id ) {
+			WMA_Logger::log( 'Coupon creation failed: unknown error', 'ERROR' );
 			return false;
 		}
 

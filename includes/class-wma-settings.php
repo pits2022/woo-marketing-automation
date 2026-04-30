@@ -3,8 +3,13 @@ defined( 'ABSPATH' ) || exit;
 
 class WMA_Settings {
 
+	private static ?array $settings_cache = null;
+
 	public static function get( string $key = '' ): mixed {
-		$settings = get_option( 'wma_settings', [] );
+		if ( self::$settings_cache === null ) {
+			self::$settings_cache = get_option( 'wma_settings', [] ) ?: [];
+		}
+		$settings = self::$settings_cache;
 		if ( $key === '' ) {
 			return $settings;
 		}
@@ -19,6 +24,7 @@ class WMA_Settings {
 	}
 
 	public static function update( array $settings ): bool {
+		self::$settings_cache = $settings;
 		return update_option( 'wma_settings', $settings );
 	}
 
@@ -70,6 +76,9 @@ class WMA_Settings {
 
 	public static function toggle_reactivation_email( int $id ): void {
 		$settings = self::get();
+		if ( ! isset( $settings['reactivation_emails'] ) || ! is_array( $settings['reactivation_emails'] ) ) {
+			return;
+		}
 		foreach ( $settings['reactivation_emails'] as &$email ) {
 			if ( (int) $email['id'] === $id ) {
 				$email['enabled'] = ! $email['enabled'];

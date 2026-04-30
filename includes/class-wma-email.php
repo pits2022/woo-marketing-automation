@@ -107,10 +107,10 @@ class WMA_Email {
 				continue;
 			}
 			$parent_id = $product->get_parent_id() ?: $id;
-			if ( in_array( $parent_id, $seen_parents, true ) ) {
+			if ( isset( $seen_parents[ $parent_id ] ) ) {
 				continue;
 			}
-			$seen_parents[] = $parent_id;
+			$seen_parents[ $parent_id ] = true;
 
 			$regular = (float) $product->get_regular_price();
 			$sale    = (float) $product->get_sale_price();

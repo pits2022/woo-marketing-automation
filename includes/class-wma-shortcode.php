@@ -69,15 +69,15 @@ class WMA_Shortcode {
 
 		ob_start();
 		?>
-		<div class="wma-form-wrap" id="<?php echo $form_id; ?>-wrap">
-			<form id="<?php echo $form_id; ?>-form" class="wma-sendy-form" data-config="<?php echo esc_attr( $js_key ); ?>" novalidate>
+		<div class="wma-form-wrap" id="<?php echo esc_attr( $form_id ); ?>-wrap">
+			<form id="<?php echo esc_attr( $form_id ); ?>-form" class="wma-sendy-form" data-config="<?php echo esc_attr( $js_key ); ?>" novalidate>
 				<div class="wma-field">
-					<label for="<?php echo $form_id; ?>-name"><?php esc_html_e( 'Name', 'woo-marketing-automation' ); ?></label>
-					<input type="text" id="<?php echo $form_id; ?>-name" name="name" placeholder="<?php esc_attr_e( 'Your name', 'woo-marketing-automation' ); ?>">
+					<label for="<?php echo esc_attr( $form_id ); ?>-name"><?php esc_html_e( 'Name', 'woo-marketing-automation' ); ?></label>
+					<input type="text" id="<?php echo esc_attr( $form_id ); ?>-name" name="name" placeholder="<?php esc_attr_e( 'Your name', 'woo-marketing-automation' ); ?>">
 				</div>
 				<div class="wma-field">
-					<label for="<?php echo $form_id; ?>-email"><?php esc_html_e( 'Email address', 'woo-marketing-automation' ); ?> *</label>
-					<input type="email" id="<?php echo $form_id; ?>-email" name="email" required placeholder="<?php esc_attr_e( 'your@email.com', 'woo-marketing-automation' ); ?>">
+					<label for="<?php echo esc_attr( $form_id ); ?>-email"><?php esc_html_e( 'Email address', 'woo-marketing-automation' ); ?> *</label>
+					<input type="email" id="<?php echo esc_attr( $form_id ); ?>-email" name="email" required placeholder="<?php esc_attr_e( 'your@email.com', 'woo-marketing-automation' ); ?>">
 				</div>
 				<?php if ( $cf_site ) : ?>
 				<div class="wma-field">
@@ -87,7 +87,7 @@ class WMA_Shortcode {
 				<div class="wma-field">
 					<button type="submit" class="wma-submit"><?php esc_html_e( 'Subscribe', 'woo-marketing-automation' ); ?></button>
 				</div>
-				<div id="<?php echo $form_id; ?>-status" class="wma-status" role="status" aria-live="polite"></div>
+				<div id="<?php echo esc_attr( $form_id ); ?>-status" class="wma-status" role="status" aria-live="polite"></div>
 			</form>
 		</div>
 		<?php
