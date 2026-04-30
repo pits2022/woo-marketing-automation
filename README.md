@@ -52,7 +52,11 @@ Subject and message for the email sent after a successful subscription via the `
 
 ### Email Template tab
 
-Global HTML template used by all outgoing emails. Available placeholders:
+Global HTML template used by all outgoing emails. 
+
+**Note on HTML format:** For security reasons, the template is strictly sanitized to prevent Cross-Site Scripting (XSS). Do **not** use a full HTML document structure starting with `<!DOCTYPE html>`. Please paste only the body structure/HTML fragments (e.g. `<div>`, `<table>`) of your newsletter design.
+
+Available placeholders:
 
 | Shortcode | Rendered when |
 |-----------|---------------|
