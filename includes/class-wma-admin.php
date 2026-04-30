@@ -630,11 +630,13 @@ class WMA_Admin {
 			exit;
 		}
 
+		$base_color = get_option( 'woocommerce_email_base_color' ) ?: '#96588a';
+
 		$data = [
 			'message'                      => '<p>This is a test message. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>',
 			'list_id'                      => 'TEST-LIST-ID',
-			'review_products'              => '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;">Product</th><th style="padding:8px;text-align:center;border-bottom:2px solid #ddd;">Qty</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#">Test Product 1</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">1</td></tr><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#">Test Product 2</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">2</td></tr></tbody></table>',
-			'discount_products'            => '<div style="margin-bottom:15px;border:1px solid #eee;padding:10px;"><a href="#" style="font-weight:bold;font-size:16px;">Test Sale Product</a><br><del style="color:#999;font-size:14px;">$20.00</del> <ins style="color:#c00;font-size:14px;text-decoration:none;">$15.00</ins></div>',
+			'review_products'              => '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;">Product</th><th style="padding:8px;text-align:center;border-bottom:2px solid #ddd;">Qty</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Product 1</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">1</td></tr><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Product 2</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">2</td></tr></tbody></table>',
+			'discount_products'            => '<div style="margin-bottom:15px;border:1px solid #eee;padding:10px;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;font-size:16px;">Test Sale Product</a><br><del style="color:#999;font-size:14px;">$20.00</del> <ins style="color:#c00;font-size:14px;text-decoration:none;">$15.00</ins></div>',
 			'coupon_percent_code'          => 'WMA-TEST-PERCENT',
 			'coupon_freeship_code'         => 'WMA-TEST-FREESHIP',
 		];
