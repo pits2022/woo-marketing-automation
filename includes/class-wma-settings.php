@@ -43,23 +43,23 @@ class WMA_Settings {
 
 	public static function save_reactivation_email( array $data ): void {
 		$settings = self::get();
-		$emails   = $settings['reactivation_emails'] ?? [];
+		if ( ! isset( $settings['reactivation_emails'] ) || ! is_array( $settings['reactivation_emails'] ) ) {
+			$settings['reactivation_emails'] = [];
+		}
 
 		if ( isset( $data['id'] ) && (int) $data['id'] > 0 ) {
-			foreach ( $emails as $i => $email ) {
+			foreach ( $settings['reactivation_emails'] as $i => $email ) {
 				if ( (int) $email['id'] === (int) $data['id'] ) {
-					$emails[ $i ]                    = $data;
-					$settings['reactivation_emails'] = $emails;
+					$settings['reactivation_emails'][ $i ] = $data;
 					self::update( $settings );
 					return;
 				}
 			}
 		}
 
-		$max_id          = array_reduce( $emails, static fn( $carry, $e ) => max( $carry, (int) $e['id'] ), 0 );
-		$data['id']      = $max_id + 1;
-		$emails[]        = $data;
-		$settings['reactivation_emails'] = $emails;
+		$max_id = array_reduce( $settings['reactivation_emails'], static fn( $carry, $e ) => max( $carry, (int) $e['id'] ), 0 );
+		$data['id'] = $max_id + 1;
+		$settings['reactivation_emails'][] = $data;
 		self::update( $settings );
 	}
 
