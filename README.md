@@ -15,7 +15,7 @@ A WordPress plugin that automates post-purchase email sequences and Sendy newsle
 
 - WordPress 6.9+
 - WooCommerce 10.7.0+
-- PHP 8.5+
+- PHP 8.1+
 - A [Sendy](https://sendy.co/) installation
 
 ## Installation
