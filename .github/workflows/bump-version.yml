@@ -1,0 +1,68 @@
+name: Bump Minor Version on PR
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    
+    # Prevent the workflow from running in a loop if the bot pushes a commit
+    if: github.actor != 'github-actions[bot]'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Required to push back to the PR branch
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Bump minor version
+        run: |
+          # Read current version from woo-marketing-automation.php
+          CURRENT_VERSION=$(grep -oP '(?<=Version:\s{5})[0-9]+\.[0-9]+\.[0-9]+' woo-marketing-automation.php)
+          
+          if [ -z "$CURRENT_VERSION" ]; then
+            echo "Error: Could not determine current version."
+            exit 1
+          fi
+
+          echo "Current Version: $CURRENT_VERSION"
+
+          # Calculate new minor version
+          IFS='.' read -ra ADDR <<< "$CURRENT_VERSION"
+          NEW_VERSION="${ADDR[0]}.$((ADDR[1]+1)).0"
+          
+          echo "New Version: $NEW_VERSION"
+
+          # 1. Update woo-marketing-automation.php (Plugin Header)
+          sed -i "s/Version:     $CURRENT_VERSION/Version:     $NEW_VERSION/g" woo-marketing-automation.php
+          
+          # 2. Update woo-marketing-automation.php (Constant)
+          sed -i "s/define( 'WMA_VERSION',\s*'$CURRENT_VERSION' );/define( 'WMA_VERSION',     '$NEW_VERSION' );/g" woo-marketing-automation.php
+
+          # 3. Update .po files
+          for file in languages/*.po; do
+            if [ -f "$file" ]; then
+              sed -i "s/Project-Id-Version: WooCommerce Marketing Automation $CURRENT_VERSION/Project-Id-Version: WooCommerce Marketing Automation $NEW_VERSION/g" "$file"
+            fi
+          done
+
+      - name: Commit and push changes
+        run: |
+          # Configure Git user for the bot
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Check if there are any changes
+          if git diff --exit-code > /dev/null; then
+            echo "No version changes detected (perhaps already bumped)."
+          else
+            git add woo-marketing-automation.php languages/*.po
+            git commit -m "chore: bump minor version to $(grep -oP '(?<=Version:\s{5})[0-9]+\.[0-9]+\.[0-9]+' woo-marketing-automation.php)"
+            git push
+          fi
