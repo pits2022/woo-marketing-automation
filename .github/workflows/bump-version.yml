@@ -1,8 +1,8 @@
-name: Bump Minor Version on PR
+name: Version and Tag on Merge
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [closed]
     branches:
       - main
 
@@ -10,15 +10,15 @@ jobs:
   bump-version:
     runs-on: ubuntu-latest
     
-    # Prevent the workflow from running in a loop if the bot pushes a commit
-    if: github.actor != 'github-actions[bot]'
+    # Run only if the PR was actually merged
+    if: github.event.pull_request.merged == true
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Required to push back to the PR branch
-          ref: ${{ github.event.pull_request.head.ref }}
+          # Check out the main branch after merge
+          ref: main
           fetch-depth: 0
 
       - name: Bump minor version
@@ -67,8 +67,8 @@ jobs:
           NEW_VERSION=$(grep -oP '(?<=Version:\s{5})[0-9]+\.[0-9]+\.[0-9]+' woo-marketing-automation.php)
           DATE=$(date +'%Y-%m-%d')
           
-          # Get commits for this PR
-          # We use github.event.pull_request.base.sha to find where the branch diverged
+          # Get commits from the PR that was just merged
+          # We use the PR merge commit's parent to find the range
           COMMITS=$(git log --no-merges --pretty=format:"- %s (%h)" ${{ github.event.pull_request.base.sha }}..HEAD)
           
           if [ -z "$COMMITS" ]; then
@@ -93,17 +93,20 @@ jobs:
           sed -i '4r new_changelog.md' CHANGELOG.md
           rm new_changelog.md
 
-      - name: Commit and push changes
+      - name: Commit, Tag and Push
         run: |
           # Configure Git user for the bot
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Check if there are any changes
-          if git diff --exit-code > /dev/null && git diff --staged --exit-code > /dev/null; then
-            echo "No version changes detected (perhaps already bumped)."
-          else
-            git add woo-marketing-automation.php languages/*.po languages/*.mo CHANGELOG.md
-            git commit -m "chore: bump minor version to $(grep -oP '(?<=Version:\s{5})[0-9]+\.[0-9]+\.[0-9]+' woo-marketing-automation.php) and update CHANGELOG"
-            git push
-          fi
+          NEW_VERSION=$(grep -oP '(?<=Version:\s{5})[0-9]+\.[0-9]+\.[0-9]+' woo-marketing-automation.php)
+          
+          git add woo-marketing-automation.php languages/*.po languages/*.mo CHANGELOG.md
+          git commit -m "chore: release version $NEW_VERSION and update CHANGELOG"
+          
+          # Create git tag
+          git tag -a "v$NEW_VERSION" -m "Version $NEW_VERSION"
+          
+          # Push both the commit and the tag to main
+          git push origin main --follow-tags
+
