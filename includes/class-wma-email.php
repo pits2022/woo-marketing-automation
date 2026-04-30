@@ -26,9 +26,12 @@ class WMA_Email {
 		$unsub_url   = $list_id ? WMA_Sendy::unsubscribe_url( $to, $list_id ) : '#';
 		$html        = self::render( $template, $data, $unsub_url );
 
+		$from_name    = get_option( 'woocommerce_email_from_name' ) ?: get_bloginfo( 'name' );
+		$from_address = get_option( 'woocommerce_email_from_address' ) ?: get_option( 'admin_email' );
+
 		$headers = [
 			'Content-Type: text/html; charset=UTF-8',
-			'From: ' . get_bloginfo( 'name' ) . ' <' . get_option( 'admin_email' ) . '>',
+			'From: ' . $from_name . ' <' . $from_address . '>',
 		];
 		if ( $list_id ) {
 			$headers[] = 'List-Unsubscribe: <' . $unsub_url . '>';
