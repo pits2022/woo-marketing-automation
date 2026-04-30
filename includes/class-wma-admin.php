@@ -492,9 +492,25 @@ class WMA_Admin {
 
 			case 'email-template':
 				$raw = $_POST['wma_email_template'] ?? [];
-				// Admin-only field; full HTML required for email design.
+				
+				$allowed_html = array_merge( wp_kses_allowed_html( 'post' ), [
+					'style' => [ 'type' => true ],
+					'html'  => [ 'lang' => true, 'xmlns' => true ],
+					'head'  => [],
+					'body'  => [ 'style' => true, 'class' => true, 'id' => true, 'bgcolor' => true ],
+					'table' => [ 'style' => true, 'class' => true, 'id' => true, 'width' => true, 'cellpadding' => true, 'cellspacing' => true, 'border' => true, 'align' => true, 'bgcolor' => true, 'role' => true ],
+					'tr'    => [ 'style' => true, 'class' => true, 'id' => true, 'align' => true, 'valign' => true, 'bgcolor' => true ],
+					'td'    => [ 'style' => true, 'class' => true, 'id' => true, 'align' => true, 'valign' => true, 'bgcolor' => true, 'width' => true, 'height' => true, 'colspan' => true, 'rowspan' => true ],
+					'th'    => [ 'style' => true, 'class' => true, 'id' => true, 'align' => true, 'valign' => true, 'bgcolor' => true, 'width' => true, 'height' => true, 'colspan' => true, 'rowspan' => true ],
+					'div'   => [ 'style' => true, 'class' => true, 'id' => true, 'align' => true ],
+					'span'  => [ 'style' => true, 'class' => true, 'id' => true ],
+					'a'     => [ 'style' => true, 'class' => true, 'id' => true, 'href' => true, 'target' => true, 'title' => true, 'rel' => true ],
+					'img'   => [ 'style' => true, 'class' => true, 'id' => true, 'src' => true, 'alt' => true, 'width' => true, 'height' => true, 'border' => true ],
+					'meta'  => [ 'charset' => true, 'name' => true, 'content' => true, 'http-equiv' => true ],
+				] );
+
 				$settings['email_template'] = [
-					'html' => wp_unslash( $raw['html'] ?? '' ),
+					'html' => wp_kses( wp_unslash( $raw['html'] ?? '' ), $allowed_html ),
 				];
 				break;
 		}
