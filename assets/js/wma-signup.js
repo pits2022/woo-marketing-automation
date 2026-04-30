@@ -21,14 +21,11 @@ jQuery( function ( $ ) {
 			$submit.prop( 'disabled', true );
 
 			var data = {
-				action:         'wma_subscribe',
-				_nonce:         config.nonce,
-				email:          $form.find( '[name="email"]' ).val(),
-				name:           $form.find( '[name="name"]' ).val(),
-				list:           config.list,
-				redirect:       config.redirect,
-				coupon_percent: config.coupon_percent,
-				coupon_expiry:  config.coupon_expiry,
+				action:    'wma_subscribe',
+				_nonce:    config.nonce,
+				email:     $form.find( '[name="email"]' ).val(),
+				name:      $form.find( '[name="name"]' ).val(),
+				config_id: config.config_id,
 			};
 
 			var token = $form.find( '[name="cf-turnstile-response"]' ).val();

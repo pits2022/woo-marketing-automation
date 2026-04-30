@@ -92,7 +92,7 @@ Reactivation emails are sent once per order per email type; a WooCommerce order 
 
 ## Logging
 
-Debug output is written to `wp-content/wma-debug.log`.
+Debug output is written to `wp-content/uploads/wma-logs/wma-debug.log`.
 
 ## License
 

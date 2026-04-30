@@ -42,19 +42,24 @@ class WMA_Shortcode {
 		wp_enqueue_script( 'wma-signup' );
 		wp_enqueue_style( 'wma-frontend' );
 
-		$form_id  = esc_attr( sanitize_html_class( $atts['id'] ) );
-		$js_key   = 'wma_cfg_' . str_replace( '-', '_', sanitize_key( $atts['id'] ) );
-		$cf_site  = WMA_Settings::get( 'sendy.cf_site_key' ) ?? '';
+		$form_id   = esc_attr( sanitize_html_class( $atts['id'] ) );
+		$js_key    = 'wma_cfg_' . str_replace( '-', '_', sanitize_key( $atts['id'] ) );
+		$cf_site   = WMA_Settings::get( 'sendy.cf_site_key' ) ?? '';
+		$config_id = wp_generate_password( 16, false );
 
-		wp_localize_script( 'wma-signup', $js_key, [
-			'ajax_url'       => admin_url( 'admin-ajax.php' ),
-			'nonce'          => wp_create_nonce( 'wma_subscribe' ),
+		set_transient( 'wma_cfg_' . $config_id, [
 			'list'           => $atts['list'],
 			'redirect'       => $atts['redirect'],
-			'coupon_percent' => $atts['coupon_percent'],
-			'coupon_expiry'  => $atts['coupon_expiry'],
-			'form_id'        => $form_id,
-			'error_message'  => __( 'An error occurred. Please try again.', 'woo-marketing-automation' ),
+			'coupon_percent' => (int) $atts['coupon_percent'],
+			'coupon_expiry'  => (int) $atts['coupon_expiry'],
+		], HOUR_IN_SECONDS );
+
+		wp_localize_script( 'wma-signup', $js_key, [
+			'ajax_url'      => admin_url( 'admin-ajax.php' ),
+			'nonce'         => wp_create_nonce( 'wma_subscribe' ),
+			'config_id'     => $config_id,
+			'form_id'       => $form_id,
+			'error_message' => __( 'An error occurred. Please try again.', 'woo-marketing-automation' ),
 		] );
 
 		if ( $cf_site ) {
@@ -99,12 +104,19 @@ class WMA_Shortcode {
 			wp_send_json_error( [ 'message' => __( 'Invalid request.', 'woo-marketing-automation' ) ] );
 		}
 
-		$email          = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
-		$name           = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
-		$list_id        = sanitize_text_field( wp_unslash( $_POST['list'] ?? '' ) );
-		$redirect       = esc_url_raw( wp_unslash( $_POST['redirect'] ?? '' ) );
-		$coupon_percent = absint( $_POST['coupon_percent'] ?? 0 );
-		$coupon_expiry  = absint( $_POST['coupon_expiry'] ?? 30 );
+		$email     = sanitize_email( wp_unslash( $_POST['email'] ?? '' ) );
+		$name      = sanitize_text_field( wp_unslash( $_POST['name'] ?? '' ) );
+		$config_id = sanitize_key( wp_unslash( $_POST['config_id'] ?? '' ) );
+
+		$config = get_transient( 'wma_cfg_' . $config_id );
+		if ( ! $config || ! is_array( $config ) ) {
+			wp_send_json_error( [ 'message' => __( 'Form session expired. Please refresh the page.', 'woo-marketing-automation' ) ] );
+		}
+
+		$list_id        = $config['list'];
+		$redirect       = $config['redirect'];
+		$coupon_percent = (int) $config['coupon_percent'];
+		$coupon_expiry  = (int) $config['coupon_expiry'];
 
 		if ( ! is_email( $email ) || ! $list_id ) {
 			wp_send_json_error( [ 'message' => __( 'Please enter a valid email address.', 'woo-marketing-automation' ) ] );
@@ -138,6 +150,8 @@ class WMA_Shortcode {
 				'list_id' => $list_id,
 			] );
 		}
+
+		delete_transient( 'wma_cfg_' . $config_id );
 
 		wp_send_json_success( [
 			'message'  => __( 'Thank you! You are now subscribed.', 'woo-marketing-automation' ),

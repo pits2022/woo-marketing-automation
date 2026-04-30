@@ -40,7 +40,6 @@ foreach ( [
 
 register_activation_hook( WMA_PLUGIN_FILE,   [ 'WMA_Activator', 'activate' ] );
 register_deactivation_hook( WMA_PLUGIN_FILE, [ 'WMA_Activator', 'deactivate' ] );
-register_uninstall_hook( WMA_PLUGIN_FILE,    [ 'WMA_Activator', 'uninstall' ] );
 
 add_action( 'plugins_loaded', static function () {
 	if ( ! defined( 'WC_VERSION' ) || version_compare( WC_VERSION, '10.7.0', '<' ) ) {

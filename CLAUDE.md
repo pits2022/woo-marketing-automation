@@ -15,7 +15,7 @@ woo-marketing-automation/
 ├── includes/
 │   ├── class-wma-activator.php    — activation/deactivation, default settings
 │   ├── class-wma-settings.php     — dot-notation settings accessor, reactivation email CRUD
-│   ├── class-wma-logger.php       — timestamped log to wp-content/wma-debug.log
+│   ├── class-wma-logger.php       — timestamped log to wp-content/uploads/wma-logs/wma-debug.log
 │   ├── class-wma-sendy.php        — Sendy subscribe/status API calls
 │   ├── class-wma-coupon.php       — WooCommerce coupon creation (percent, free shipping)
 │   ├── class-wma-email.php        — HTML email sender, product table builders

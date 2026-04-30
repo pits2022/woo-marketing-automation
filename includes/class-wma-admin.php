@@ -501,7 +501,7 @@ class WMA_Admin {
 
 		WMA_Settings::update( $settings );
 
-		wp_redirect(
+		wp_safe_redirect(
 			add_query_arg( 'settings-updated', '1', admin_url( 'admin.php?page=wma&tab=' . $tab ) )
 		);
 		exit;
@@ -542,11 +542,11 @@ class WMA_Admin {
 					'coupon_expiry_percent'   => absint( $raw['coupon_expiry_percent'] ?? 30 ),
 					'coupon_expiry_freeship'  => absint( $raw['coupon_expiry_freeship'] ?? 0 ),
 				] );
-				wp_redirect( add_query_arg( 'settings-updated', '1', admin_url( 'admin.php?page=wma&tab=reactivation' ) ) );
+				wp_safe_redirect( add_query_arg( 'settings-updated', '1', admin_url( 'admin.php?page=wma&tab=reactivation' ) ) );
 				exit;
 		}
 
-		wp_redirect( admin_url( 'admin.php?page=wma&tab=reactivation' ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=wma&tab=reactivation' ) );
 		exit;
 	}
 
