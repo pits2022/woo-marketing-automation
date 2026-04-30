@@ -120,7 +120,12 @@ class WMA_Shortcode {
 			wp_send_json_error( [ 'message' => __( 'Invalid or corrupted configuration data.', 'woo-marketing-automation' ) ] );
 		}
 
-		$config = json_decode( base64_decode( $payload ), true );
+		$config_json = base64_decode( $payload, true );
+		if ( $config_json === false ) {
+			wp_send_json_error( [ 'message' => __( 'Malformed configuration data.', 'woo-marketing-automation' ) ] );
+		}
+
+		$config = json_decode( $config_json, true );
 		if ( ! is_array( $config ) ) {
 			wp_send_json_error( [ 'message' => __( 'Malformed configuration data.', 'woo-marketing-automation' ) ] );
 		}
