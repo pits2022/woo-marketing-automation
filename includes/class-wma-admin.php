@@ -57,6 +57,20 @@ class WMA_Admin {
 		<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Test email sent successfully.', 'woo-marketing-automation' ); ?></p></div>
 		<?php endif; ?>
 
+		<?php if ( isset( $_GET['test-email-error'] ) ) : ?>
+		<div class="notice notice-error is-dismissible">
+			<p>
+				<?php 
+				if ( $_GET['test-email-error'] === '1' ) {
+					esc_html_e( 'Please provide a valid email address.', 'woo-marketing-automation' );
+				} else {
+					esc_html_e( 'Failed to send test email. Please check your server email configuration or the debug log.', 'woo-marketing-automation' );
+				}
+				?>
+			</p>
+		</div>
+		<?php endif; ?>
+
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper">
 			<?php
 			$tabs = [
@@ -591,20 +605,27 @@ class WMA_Admin {
 		}
 
 		$email = sanitize_email( wp_unslash( $_POST['test_email_address'] ?? '' ) );
-		if ( is_email( $email ) ) {
-			$data = [
-				'message'                      => '<p>This is a test message. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>',
-				'list_id'                      => 'TEST-LIST-ID',
-				'review_products'              => '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;">Product</th><th style="padding:8px;text-align:center;border-bottom:2px solid #ddd;">Qty</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#">Test Product 1</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">1</td></tr><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#">Test Product 2</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">2</td></tr></tbody></table>',
-				'discount_products'            => '<div style="margin-bottom:15px;border:1px solid #eee;padding:10px;"><a href="#" style="font-weight:bold;font-size:16px;">Test Sale Product</a><br><del style="color:#999;font-size:14px;">$20.00</del> <ins style="color:#c00;font-size:14px;text-decoration:none;">$15.00</ins></div>',
-				'coupon_percent_code'          => 'WMA-TEST-PERCENT',
-				'coupon_freeship_code'         => 'WMA-TEST-FREESHIP',
-			];
-
-			WMA_Email::send( $email, 'Test User', 'Test Email: Marketing Automation', $data );
+		if ( ! is_email( $email ) ) {
+			wp_safe_redirect( add_query_arg( 'test-email-error', '1', admin_url( 'admin.php?page=wma&tab=email-template' ) ) );
+			exit;
 		}
 
-		wp_safe_redirect( add_query_arg( 'test-email-sent', '1', admin_url( 'admin.php?page=wma&tab=email-template' ) ) );
+		$data = [
+			'message'                      => '<p>This is a test message. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>',
+			'list_id'                      => 'TEST-LIST-ID',
+			'review_products'              => '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;">Product</th><th style="padding:8px;text-align:center;border-bottom:2px solid #ddd;">Qty</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#">Test Product 1</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">1</td></tr><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#">Test Product 2</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">2</td></tr></tbody></table>',
+			'discount_products'            => '<div style="margin-bottom:15px;border:1px solid #eee;padding:10px;"><a href="#" style="font-weight:bold;font-size:16px;">Test Sale Product</a><br><del style="color:#999;font-size:14px;">$20.00</del> <ins style="color:#c00;font-size:14px;text-decoration:none;">$15.00</ins></div>',
+			'coupon_percent_code'          => 'WMA-TEST-PERCENT',
+			'coupon_freeship_code'         => 'WMA-TEST-FREESHIP',
+		];
+
+		$sent = WMA_Email::send( $email, 'Test User', 'Test Email: Marketing Automation', $data );
+
+		if ( $sent ) {
+			wp_safe_redirect( add_query_arg( 'test-email-sent', '1', admin_url( 'admin.php?page=wma&tab=email-template' ) ) );
+		} else {
+			wp_safe_redirect( add_query_arg( 'test-email-error', '2', admin_url( 'admin.php?page=wma&tab=email-template' ) ) );
+		}
 		exit;
 	}
 
