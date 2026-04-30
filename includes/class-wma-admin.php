@@ -9,6 +9,19 @@ class WMA_Admin {
 		add_action( 'admin_post_wma_reactivation_action', [ self::class, 'handle_reactivation_action' ] );
 		add_action( 'admin_post_wma_test_email',         [ self::class, 'handle_test_email' ] );
 		add_action( 'admin_enqueue_scripts',             [ self::class, 'enqueue_scripts' ] );
+		add_filter( 'plugin_action_links_' . plugin_basename( WMA_PLUGIN_FILE ), [ self::class, 'add_plugin_action_links' ] );
+	}
+
+	public static function add_plugin_action_links( array $links ): array {
+		$settings_url = admin_url( 'admin.php?page=wma' );
+		$docs_url     = 'https://github.com/pits2022/woo-marketing-automation/blob/main/README.md';
+
+		$custom_links = [
+			'settings' => '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'woo-marketing-automation' ) . '</a>',
+			'docs'     => '<a href="' . esc_url( $docs_url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Documentation', 'woo-marketing-automation' ) . '</a>',
+		];
+
+		return array_merge( $custom_links, $links );
 	}
 
 	public static function add_menu(): void {
