@@ -48,6 +48,8 @@ A WordPress plugin that automates post-purchase email sequences and Sendy newsle
 
 Subject and message for the email sent after a successful subscription via the `[wma-sendy]` shortcode.
 
+**Important note about coupons:** If you use the `[WMA_COUPON_CODE_PERCENT]` placeholder in your email template, its value is **not** configured globally here. Instead, it is controlled by the shortcode attributes (`coupon_percent` and `coupon_expiry`) where you place the form. When a user subscribes, the plugin dynamically generates a unique, one-time-use WooCommerce coupon and injects the code into the email.
+
 ### Email Template tab
 
 Global HTML template used by all outgoing emails. Available placeholders:
