@@ -16,3 +16,12 @@
 	background: #e9ecef;
 	color: #6c757d;
 }
+
+/* Test Email Box */
+.wma-test-email-box {
+	max-width: 800px;
+	margin-top: 20px;
+}
+.wma-test-email-box input[type="email"] {
+	margin-top: 4px;
+}

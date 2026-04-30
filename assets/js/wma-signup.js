@@ -25,7 +25,8 @@ jQuery( function ( $ ) {
 				_nonce:    config.nonce,
 				email:     $form.find( '[name="email"]' ).val(),
 				name:      $form.find( '[name="name"]' ).val(),
-				config_id: config.config_id,
+				payload:   config.payload,
+				signature: config.signature,
 			};
 
 			var token = $form.find( '[name="cf-turnstile-response"]' ).val();

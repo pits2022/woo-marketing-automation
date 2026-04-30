@@ -48,9 +48,15 @@ A WordPress plugin that automates post-purchase email sequences and Sendy newsle
 
 Subject and message for the email sent after a successful subscription via the `[wma-sendy]` shortcode.
 
+**Important note about coupons:** If you use the `[WMA_COUPON_CODE_PERCENT]` placeholder in your email template, its value is **not** configured globally here. Instead, it is controlled by the shortcode attributes (`coupon_percent` and `coupon_expiry`) where you place the form. When a user subscribes, the plugin dynamically generates a unique, one-time-use WooCommerce coupon and injects the code into the email.
+
 ### Email Template tab
 
-Global HTML template used by all outgoing emails. Available placeholders:
+Global HTML template used by all outgoing emails. 
+
+**Note on HTML format:** For security reasons, the template is strictly sanitized to prevent Cross-Site Scripting (XSS). Do **not** use a full HTML document structure starting with `<!DOCTYPE html>`. Please paste only the body structure/HTML fragments (e.g. `<div>`, `<table>`) of your newsletter design.
+
+Available placeholders:
 
 | Shortcode | Rendered when |
 |-----------|---------------|
@@ -89,6 +95,29 @@ Reactivation emails are sent once per order per email type; a WooCommerce order 
 | `redirect` | _(none)_ | URL to redirect to after successful subscription |
 | `coupon_percent` | `0` | Percentage discount sent in the welcome email (0 = disabled) |
 | `coupon_expiry` | `30` | Coupon validity in days |
+
+### Form Styling
+
+The `[wma-sendy]` form is designed to inherit your active WordPress theme's styles for inputs and buttons. It does not ship with opinionated colors or borders. 
+
+However, you may want to add custom CSS to style the success and error status messages. You can add the following starter snippet to **Appearance → Customize → Additional CSS**:
+
+```css
+/* WMA Sendy Form - Status Messages */
+.wma-status {
+    border-radius: 4px;
+}
+.wma-status.wma-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.wma-status.wma-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+```
 
 ## Logging
 

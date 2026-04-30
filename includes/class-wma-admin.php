@@ -7,6 +7,7 @@ class WMA_Admin {
 		add_action( 'admin_menu',                        [ self::class, 'add_menu' ] );
 		add_action( 'admin_post_wma_save_settings',      [ self::class, 'handle_save' ] );
 		add_action( 'admin_post_wma_reactivation_action', [ self::class, 'handle_reactivation_action' ] );
+		add_action( 'admin_post_wma_test_email',         [ self::class, 'handle_test_email' ] );
 		add_action( 'admin_enqueue_scripts',             [ self::class, 'enqueue_scripts' ] );
 	}
 
@@ -50,6 +51,25 @@ class WMA_Admin {
 
 		<?php if ( isset( $_GET['settings-updated'] ) ) : ?>
 		<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Settings saved.', 'woo-marketing-automation' ); ?></p></div>
+		<?php endif; ?>
+
+		<?php if ( isset( $_GET['test-email-sent'] ) ) : ?>
+		<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Test email sent successfully.', 'woo-marketing-automation' ); ?></p></div>
+		<?php endif; ?>
+
+		<?php if ( isset( $_GET['test-email-error'] ) ) : ?>
+		<div class="notice notice-error is-dismissible">
+			<p>
+				<?php 
+				$error_code = sanitize_text_field( wp_unslash( $_GET['test-email-error'] ) );
+				if ( $error_code === '1' ) {
+					esc_html_e( 'Please provide a valid email address.', 'woo-marketing-automation' );
+				} else {
+					esc_html_e( 'Failed to send test email. Please check your server email configuration or the debug log.', 'woo-marketing-automation' );
+				}
+				?>
+			</p>
+		</div>
 		<?php endif; ?>
 
 		<nav class="nav-tab-wrapper woo-nav-tab-wrapper">
@@ -222,6 +242,25 @@ class WMA_Admin {
 
 	private static function tab_email_template(): void {
 		$html = WMA_Settings::get( 'email_template.html' ) ?? '';
+		?>
+		<div class="postbox wma-test-email-box">
+			<h2 class="hndle"><span><?php esc_html_e( 'Test Email Template', 'woo-marketing-automation' ); ?></span></h2>
+			<div class="inside">
+				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+					<input type="hidden" name="action" value="wma_test_email">
+					<?php wp_nonce_field( 'wma_test_email', 'wma_nonce' ); ?>
+					<p>
+						<label for="wma_test_email_address"><strong><?php esc_html_e( 'Email Address:', 'woo-marketing-automation' ); ?></strong></label><br>
+						<input type="email" id="wma_test_email_address" name="test_email_address" required class="regular-text" placeholder="you@example.com">
+					</p>
+					<p>
+						<?php submit_button( __( 'Send Test Email', 'woo-marketing-automation' ), 'secondary', 'submit', false ); ?>
+					</p>
+					<p class="description"><?php esc_html_e( 'This will send a test email using the currently saved template. Fake coupon codes will be used.', 'woo-marketing-automation' ); ?></p>
+				</form>
+			</div>
+		</div>
+		<?php
 		self::form_open( 'email-template' );
 		?>
 		<p><?php esc_html_e( 'Global HTML email template used by all outgoing emails. Available shortcodes:', 'woo-marketing-automation' ); ?></p>
@@ -563,6 +602,37 @@ class WMA_Admin {
 		}
 
 		wp_safe_redirect( admin_url( 'admin.php?page=wma&tab=reactivation' ) );
+		exit;
+	}
+
+	public static function handle_test_email(): void {
+		check_admin_referer( 'wma_test_email', 'wma_nonce' );
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( esc_html__( 'Unauthorized.', 'woo-marketing-automation' ) );
+		}
+
+		$email = sanitize_email( wp_unslash( $_POST['test_email_address'] ?? '' ) );
+		if ( ! is_email( $email ) ) {
+			wp_safe_redirect( add_query_arg( 'test-email-error', '1', admin_url( 'admin.php?page=wma&tab=email-template' ) ) );
+			exit;
+		}
+
+		$data = [
+			'message'                      => '<p>This is a test message. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>',
+			'list_id'                      => 'TEST-LIST-ID',
+			'review_products'              => '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;">Product</th><th style="padding:8px;text-align:center;border-bottom:2px solid #ddd;">Qty</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#">Test Product 1</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">1</td></tr><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#">Test Product 2</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">2</td></tr></tbody></table>',
+			'discount_products'            => '<div style="margin-bottom:15px;border:1px solid #eee;padding:10px;"><a href="#" style="font-weight:bold;font-size:16px;">Test Sale Product</a><br><del style="color:#999;font-size:14px;">$20.00</del> <ins style="color:#c00;font-size:14px;text-decoration:none;">$15.00</ins></div>',
+			'coupon_percent_code'          => 'WMA-TEST-PERCENT',
+			'coupon_freeship_code'         => 'WMA-TEST-FREESHIP',
+		];
+
+		$sent = WMA_Email::send( $email, 'Test User', 'Test Email: Marketing Automation', $data );
+
+		if ( $sent ) {
+			wp_safe_redirect( add_query_arg( 'test-email-sent', '1', admin_url( 'admin.php?page=wma&tab=email-template' ) ) );
+		} else {
+			wp_safe_redirect( add_query_arg( 'test-email-error', '2', admin_url( 'admin.php?page=wma&tab=email-template' ) ) );
+		}
 		exit;
 	}
 

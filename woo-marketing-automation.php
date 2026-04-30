@@ -41,6 +41,12 @@ foreach ( [
 register_activation_hook( WMA_PLUGIN_FILE,   [ 'WMA_Activator', 'activate' ] );
 register_deactivation_hook( WMA_PLUGIN_FILE, [ 'WMA_Activator', 'deactivate' ] );
 
+add_action( 'before_woocommerce_init', static function () {
+	if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', WMA_PLUGIN_FILE, true );
+	}
+} );
+
 add_action( 'plugins_loaded', static function () {
 	if ( ! defined( 'WC_VERSION' ) || version_compare( WC_VERSION, '10.7.0', '<' ) ) {
 		add_action( 'admin_notices', static function () {
