@@ -52,6 +52,37 @@ jobs:
             fi
           done
 
+      - name: Generate Changelog
+        run: |
+          NEW_VERSION=$(grep -oP '(?<=Version:\s{5})[0-9]+\.[0-9]+\.[0-9]+' woo-marketing-automation.php)
+          DATE=$(date +'%Y-%m-%d')
+          
+          # Get commits for this PR
+          # We use github.event.pull_request.base.sha to find where the branch diverged
+          COMMITS=$(git log --no-merges --pretty=format:"- %s (%h)" ${{ github.event.pull_request.base.sha }}..HEAD)
+          
+          if [ -z "$COMMITS" ]; then
+            COMMITS="- No documented changes."
+          fi
+          
+          # Create temporary file with the new release block
+          echo "## [$NEW_VERSION] - $DATE" > new_changelog.md
+          echo "" >> new_changelog.md
+          echo "$COMMITS" >> new_changelog.md
+          echo "" >> new_changelog.md
+          
+          # If CHANGELOG.md doesn't exist, create it with a header
+          if [ ! -f CHANGELOG.md ]; then
+            echo "# Changelog" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            echo "All notable changes to this project will be documented in this file." >> CHANGELOG.md
+            echo "" >> CHANGELOG.md
+          fi
+          
+          # Insert the new changelog block after the header (line 4)
+          sed -i '4r new_changelog.md' CHANGELOG.md
+          rm new_changelog.md
+
       - name: Commit and push changes
         run: |
           # Configure Git user for the bot
@@ -62,7 +93,7 @@ jobs:
           if git diff --exit-code > /dev/null; then
             echo "No version changes detected (perhaps already bumped)."
           else
-            git add woo-marketing-automation.php languages/*.po
-            git commit -m "chore: bump minor version to $(grep -oP '(?<=Version:\s{5})[0-9]+\.[0-9]+\.[0-9]+' woo-marketing-automation.php)"
+            git add woo-marketing-automation.php languages/*.po CHANGELOG.md
+            git commit -m "chore: bump minor version to $(grep -oP '(?<=Version:\s{5})[0-9]+\.[0-9]+\.[0-9]+' woo-marketing-automation.php) and update CHANGELOG"
             git push
           fi
