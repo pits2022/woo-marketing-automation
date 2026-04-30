@@ -1,0 +1,18 @@
+.wma-admin .wma-tab-content {
+	margin-top: 20px;
+}
+.wma-badge {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 10px;
+	font-size: 12px;
+	font-weight: 600;
+}
+.wma-badge--active {
+	background: #d4edda;
+	color: #155724;
+}
+.wma-badge--inactive {
+	background: #e9ecef;
+	color: #6c757d;
+}

@@ -1,0 +1,265 @@
+# WooCommerce Marketing Automation — English (United States)
+# Copyright (C) 2026 Professional IT Services
+# This file is distributed under the GPL-2.0-or-later license.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Marketing Automation 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/pits2022/woo-marketing-automation/issues\n"
+"POT-Creation-Date: 2026-04-29 12:00+0200\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Manual\n"
+
+msgid "WooCommerce Marketing Automation requires WooCommerce 10.7.0 or higher."
+msgstr "WooCommerce Marketing Automation requires WooCommerce 10.7.0 or higher."
+
+msgid "Marketing Automation"
+msgstr "Marketing Automation"
+
+msgid "Sendy"
+msgstr "Sendy"
+
+msgid "Customer Lists"
+msgstr "Customer Lists"
+
+msgid "Welcome Email"
+msgstr "Welcome Email"
+
+msgid "Email Template"
+msgstr "Email Template"
+
+msgid "Reactivation Emails"
+msgstr "Reactivation Emails"
+
+msgid "Settings saved."
+msgstr "Settings saved."
+
+msgid "Unauthorized."
+msgstr "Unauthorized."
+
+msgid "Sendy URL"
+msgstr "Sendy URL"
+
+msgid "Base URL of your Sendy installation, e.g. https://sendy.example.com"
+msgstr "Base URL of your Sendy installation, e.g. https://sendy.example.com"
+
+msgid "Sendy API Key"
+msgstr "Sendy API Key"
+
+msgid "Cloudflare Turnstile Site Key"
+msgstr "Cloudflare Turnstile Site Key"
+
+msgid "Optional. Renders the CAPTCHA widget in subscription forms."
+msgstr "Optional. Renders the CAPTCHA widget in subscription forms."
+
+msgid "Cloudflare Turnstile Secret Key"
+msgstr "Cloudflare Turnstile Secret Key"
+
+msgid "Optional. Used for server-side CAPTCHA verification."
+msgstr "Optional. Used for server-side CAPTCHA verification."
+
+msgid "Save Settings"
+msgstr "Save Settings"
+
+msgid "Customers List ID"
+msgstr "Customers List ID"
+
+msgid "Every customer is added to this Sendy list on order completion."
+msgstr "Every customer is added to this Sendy list on order completion."
+
+msgid "VIP Customers List ID"
+msgstr "VIP Customers List ID"
+
+msgid "VIP Minimum Order Amount"
+msgstr "VIP Minimum Order Amount"
+
+msgid "Orders at or above this total qualify for the VIP list."
+msgstr "Orders at or above this total qualify for the VIP list."
+
+msgid "Returning Customers List ID"
+msgstr "Returning Customers List ID"
+
+msgid "Customers with a previous completed order are added here too."
+msgstr "Customers with a previous completed order are added here too."
+
+msgid "Email Subject"
+msgstr "Email Subject"
+
+msgid "Email Message"
+msgstr "Email Message"
+
+msgid "Injected into [WMA_MESSAGE]. Use [WMA_COUPON_CODE_PERCENT] to display the coupon code sent via the shortcode parameter."
+msgstr "Injected into [WMA_MESSAGE]. Use [WMA_COUPON_CODE_PERCENT] to display the coupon code sent via the shortcode parameter."
+
+msgid "Global HTML email template used by all outgoing emails. Available shortcodes:"
+msgstr "Global HTML email template used by all outgoing emails. Available shortcodes:"
+
+msgid "Per-email message text (always rendered)"
+msgstr "Per-email message text (always rendered)"
+
+msgid "Ordered products table (when enabled on the reactivation email)"
+msgstr "Ordered products table (when enabled on the reactivation email)"
+
+msgid "Top discounted products table (when top_sale_products > 0)"
+msgstr "Top discounted products table (when top_sale_products > 0)"
+
+msgid "Percentage discount coupon (when coupon_percent > 0)"
+msgstr "Percentage discount coupon (when coupon_percent > 0)"
+
+msgid "Free shipping coupon (when coupon_expiry_freeship > 0)"
+msgstr "Free shipping coupon (when coupon_expiry_freeship > 0)"
+
+msgid "Unsubscribe link URL"
+msgstr "Unsubscribe link URL"
+
+msgid "Save Template"
+msgstr "Save Template"
+
+msgid "+ Add Reactivation Email"
+msgstr "+ Add Reactivation Email"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Wait Period"
+msgstr "Wait Period"
+
+msgid "Content"
+msgstr "Content"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "No reactivation emails configured yet."
+msgstr "No reactivation emails configured yet."
+
+msgid "%d days"
+msgstr "%d days"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Inactive"
+msgstr "Inactive"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Disable"
+msgstr "Disable"
+
+msgid "Enable"
+msgstr "Enable"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Delete this reactivation email?"
+msgstr "Delete this reactivation email?"
+
+msgid "Edit Reactivation Email"
+msgstr "Edit Reactivation Email"
+
+msgid "Add Reactivation Email"
+msgstr "Add Reactivation Email"
+
+msgid "Reactivation email not found."
+msgstr "Reactivation email not found."
+
+msgid "Wait Period (days)"
+msgstr "Wait Period (days)"
+
+msgid "Days after order completion before sending this email."
+msgstr "Days after order completion before sending this email."
+
+msgid "Injected into [WMA_MESSAGE] in the global template."
+msgstr "Injected into [WMA_MESSAGE] in the global template."
+
+msgid "[WMA_REVIEW_PRODUCTS]"
+msgstr "[WMA_REVIEW_PRODUCTS]"
+
+msgid "Include ordered products table"
+msgstr "Include ordered products table"
+
+msgid "[WMA_DISCOUNT_PRODUCTS]"
+msgstr "[WMA_DISCOUNT_PRODUCTS]"
+
+msgid "Number of top discounted products:"
+msgstr "Number of top discounted products:"
+
+msgid "0 = disabled (shortcode stripped)"
+msgstr "0 = disabled (shortcode stripped)"
+
+msgid "[WMA_COUPON_CODE_PERCENT]"
+msgstr "[WMA_COUPON_CODE_PERCENT]"
+
+msgid "Discount %:"
+msgstr "Discount %:"
+
+msgid "Expiry (days):"
+msgstr "Expiry (days):"
+
+msgid "0% = disabled."
+msgstr "0% = disabled."
+
+msgid "[WMA_COUPON_CODE_FREESHIPMENT]"
+msgstr "[WMA_COUPON_CODE_FREESHIPMENT]"
+
+msgid "0 = disabled."
+msgstr "0 = disabled."
+
+msgid "Save Email"
+msgstr "Save Email"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Your coupon code:"
+msgstr "Your coupon code:"
+
+msgid "Product"
+msgstr "Product"
+
+msgid "Qty"
+msgstr "Qty"
+
+msgid "Regular"
+msgstr "Regular"
+
+msgid "Sale"
+msgstr "Sale"
+
+msgid "Discount"
+msgstr "Discount"
+
+msgid "Email address"
+msgstr "Email address"
+
+msgid "Your name"
+msgstr "Your name"
+
+msgid "your@email.com"
+msgstr "your@email.com"
+
+msgid "Subscribe"
+msgstr "Subscribe"
+
+msgid "Thank you! You are now subscribed."
+msgstr "Thank you! You are now subscribed."
+
+msgid "Invalid request."
+msgstr "Invalid request."
+
+msgid "Please enter a valid email address."
+msgstr "Please enter a valid email address."
+
+msgid "CAPTCHA verification failed. Please try again."
+msgstr "CAPTCHA verification failed. Please try again."
+
+msgid "An error occurred. Please try again."
+msgstr "An error occurred. Please try again."
