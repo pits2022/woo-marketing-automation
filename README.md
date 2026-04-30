@@ -96,6 +96,29 @@ Reactivation emails are sent once per order per email type; a WooCommerce order 
 | `coupon_percent` | `0` | Percentage discount sent in the welcome email (0 = disabled) |
 | `coupon_expiry` | `30` | Coupon validity in days |
 
+### Form Styling
+
+The `[wma-sendy]` form is designed to inherit your active WordPress theme's styles for inputs and buttons. It does not ship with opinionated colors or borders. 
+
+However, you may want to add custom CSS to style the success and error status messages. You can add the following starter snippet to **Appearance → Customize → Additional CSS**:
+
+```css
+/* WMA Sendy Form - Status Messages */
+.wma-status {
+    border-radius: 4px;
+}
+.wma-status.wma-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.wma-status.wma-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+```
+
 ## Logging
 
 Debug output is written to `wp-content/uploads/wma-logs/wma-debug.log`.
