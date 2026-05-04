@@ -73,7 +73,7 @@ jobs:
           
           # Get commits from the PR that was just merged
           # We use the PR merge commit's parent to find the range
-          COMMITS=$(git log --no-merges --pretty=format:"- %s (%h)" $BASE_SHA..HEAD)
+          COMMITS=$(git log --no-merges --pretty=format:"- %s (%h)" "$BASE_SHA"..HEAD)
           
           if [ -z "$COMMITS" ]; then
             COMMITS="- No documented changes."

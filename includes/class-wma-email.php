@@ -70,7 +70,7 @@ class WMA_Email {
 			. '</div>';
 	}
 
-	private static function get_base_color(): string {
+	public static function get_base_color(): string {
 		static $base_color = null;
 		if ( null === $base_color ) {
 			$base_color = get_option( 'woocommerce_email_base_color' ) ?: '#96588a';

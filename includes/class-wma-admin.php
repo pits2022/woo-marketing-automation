@@ -635,7 +635,7 @@ class WMA_Admin {
 			exit;
 		}
 
-		$base_color = get_option( 'woocommerce_email_base_color' ) ?: '#96588a';
+		$base_color = WMA_Email::get_base_color();
 
 		$data = [
 			'message'                      => '<p>This is a test message. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>',
