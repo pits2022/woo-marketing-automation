@@ -70,8 +70,18 @@ class WMA_Email {
 			. '</div>';
 	}
 
+	public static function get_base_color(): string {
+		static $base_color = null;
+		if ( null === $base_color ) {
+			$base_color = get_option( 'woocommerce_email_base_color' ) ?: '#96588a';
+		}
+		return $base_color;
+	}
+
 	public static function build_review_products( WC_Order $order ): string {
 		$rows = '';
+		$base_color = self::get_base_color();
+
 		foreach ( $order->get_items() as $item ) {
 			$product = $item->get_product();
 			if ( ! $product ) {
@@ -81,7 +91,7 @@ class WMA_Email {
 			$name = esc_html( $item->get_name() );
 			$qty  = (int) $item->get_quantity();
 			$rows .= "<tr>"
-				. "<td style='padding:8px;border-bottom:1px solid #eee;'><a href='{$url}'>{$name}</a></td>"
+				. "<td style='padding:8px;border-bottom:1px solid #eee;'><a href='{$url}' style='color:" . esc_attr( $base_color ) . ";text-decoration:none;font-weight:bold;'>{$name}</a></td>"
 				. "<td style='padding:8px;border-bottom:1px solid #eee;text-align:center;'>{$qty}</td>"
 				. "</tr>";
 		}
@@ -131,6 +141,8 @@ class WMA_Email {
 		}
 
 		$rows = '';
+		$base_color = self::get_base_color();
+
 		foreach ( $products as $item ) {
 			$product  = $item['product'];
 			$url      = esc_url( get_permalink( $product->get_id() ) );
@@ -148,7 +160,7 @@ class WMA_Email {
 			}
 			$rows .= "<tr>"
 				. "<td style='padding:8px;border-bottom:1px solid #eee;width:70px;'>{$img_html}</td>"
-				. "<td style='padding:8px;border-bottom:1px solid #eee;'><a href='{$url}'>{$name}</a></td>"
+				. "<td style='padding:8px;border-bottom:1px solid #eee;'><a href='{$url}' style='color:" . esc_attr( $base_color ) . ";text-decoration:none;font-weight:bold;'>{$name}</a></td>"
 				. "<td style='padding:8px;border-bottom:1px solid #eee;text-decoration:line-through;color:#999;'>{$regular}</td>"
 				. "<td style='padding:8px;border-bottom:1px solid #eee;color:#c00;font-weight:bold;'>{$sale}</td>"
 				. "<td style='padding:8px;border-bottom:1px solid #eee;'><span style='background:#c00;color:#fff;padding:2px 6px;border-radius:3px;font-size:12px;'>-{$pct}%</span></td>"

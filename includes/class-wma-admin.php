@@ -9,6 +9,24 @@ class WMA_Admin {
 		add_action( 'admin_post_wma_reactivation_action', [ self::class, 'handle_reactivation_action' ] );
 		add_action( 'admin_post_wma_test_email',         [ self::class, 'handle_test_email' ] );
 		add_action( 'admin_enqueue_scripts',             [ self::class, 'enqueue_scripts' ] );
+		add_filter( 'plugin_action_links_' . plugin_basename( WMA_PLUGIN_FILE ), [ self::class, 'add_plugin_action_links' ] );
+	}
+
+	public static function add_plugin_action_links( array $links ): array {
+		if ( ! function_exists( 'get_plugin_data' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+		$plugin_data  = get_plugin_data( WMA_PLUGIN_FILE, false, false );
+		$plugin_uri   = ! empty( $plugin_data['PluginURI'] ) ? rtrim( $plugin_data['PluginURI'], '/' ) : 'https://github.com/pits2022/woo-marketing-automation';
+		$settings_url = admin_url( 'admin.php?page=wma' );
+		$docs_url     = $plugin_uri . '/blob/main/README.md';
+
+		$custom_links = [
+			'settings' => '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'woo-marketing-automation' ) . '</a>',
+			'docs'     => '<a href="' . esc_url( $docs_url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Documentation', 'woo-marketing-automation' ) . '</a>',
+		];
+
+		return array_merge( $custom_links, $links );
 	}
 
 	public static function add_menu(): void {
@@ -617,11 +635,13 @@ class WMA_Admin {
 			exit;
 		}
 
+		$base_color = WMA_Email::get_base_color();
+
 		$data = [
 			'message'                      => '<p>This is a test message. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>',
 			'list_id'                      => 'TEST-LIST-ID',
-			'review_products'              => '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;">Product</th><th style="padding:8px;text-align:center;border-bottom:2px solid #ddd;">Qty</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#">Test Product 1</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">1</td></tr><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#">Test Product 2</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">2</td></tr></tbody></table>',
-			'discount_products'            => '<div style="margin-bottom:15px;border:1px solid #eee;padding:10px;"><a href="#" style="font-weight:bold;font-size:16px;">Test Sale Product</a><br><del style="color:#999;font-size:14px;">$20.00</del> <ins style="color:#c00;font-size:14px;text-decoration:none;">$15.00</ins></div>',
+			'review_products'              => '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;">Product</th><th style="padding:8px;text-align:center;border-bottom:2px solid #ddd;">Qty</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Product 1</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">1</td></tr><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Product 2</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">2</td></tr></tbody></table>',
+			'discount_products'            => '<div style="margin-bottom:15px;border:1px solid #eee;padding:10px;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;font-size:16px;">Test Sale Product</a><br><del style="color:#999;font-size:14px;">$20.00</del> <ins style="color:#c00;font-size:14px;text-decoration:none;">$15.00</ins></div>',
 			'coupon_percent_code'          => 'WMA-TEST-PERCENT',
 			'coupon_freeship_code'         => 'WMA-TEST-FREESHIP',
 		];

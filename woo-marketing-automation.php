@@ -12,6 +12,8 @@
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: woo-marketing-automation
  * Domain Path: /languages
+ * GitHub Plugin URI: https://github.com/pits2022/woo-marketing-automation
+ * Primary Branch: main
  * WC requires at least: 10.7.0
  * WC tested up to:      10.7.0
  */
