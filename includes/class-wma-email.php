@@ -70,10 +70,18 @@ class WMA_Email {
 			. '</div>';
 	}
 
+	private static function get_base_color(): string {
+		static $base_color = null;
+		if ( null === $base_color ) {
+			$base_color = get_option( 'woocommerce_email_base_color' ) ?: '#96588a';
+		}
+		return $base_color;
+	}
+
 	public static function build_review_products( WC_Order $order ): string {
 		$rows = '';
-		$base_color = get_option( 'woocommerce_email_base_color' ) ?: '#96588a';
-		
+		$base_color = self::get_base_color();
+
 		foreach ( $order->get_items() as $item ) {
 			$product = $item->get_product();
 			if ( ! $product ) {
@@ -133,7 +141,7 @@ class WMA_Email {
 		}
 
 		$rows = '';
-		$base_color = get_option( 'woocommerce_email_base_color' ) ?: '#96588a';
+		$base_color = self::get_base_color();
 
 		foreach ( $products as $item ) {
 			$product  = $item['product'];

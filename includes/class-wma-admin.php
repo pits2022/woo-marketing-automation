@@ -13,8 +13,13 @@ class WMA_Admin {
 	}
 
 	public static function add_plugin_action_links( array $links ): array {
+		if ( ! function_exists( 'get_plugin_data' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+		$plugin_data  = get_plugin_data( WMA_PLUGIN_FILE, false, false );
+		$plugin_uri   = ! empty( $plugin_data['PluginURI'] ) ? rtrim( $plugin_data['PluginURI'], '/' ) : 'https://github.com/pits2022/woo-marketing-automation';
 		$settings_url = admin_url( 'admin.php?page=wma' );
-		$docs_url     = 'https://github.com/pits2022/woo-marketing-automation/blob/main/README.md';
+		$docs_url     = $plugin_uri . '/blob/main/README.md';
 
 		$custom_links = [
 			'settings' => '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'woo-marketing-automation' ) . '</a>',
