@@ -3,14 +3,14 @@ defined( 'ABSPATH' ) || exit;
 
 class WMA_Sendy {
 
-	public static function subscribe( string $email, string $name, string $list_id ): bool {
+	public static function subscribe( string $email, string $name, string $list_id ): string {
 		$settings = WMA_Settings::get( 'sendy' );
 		$base_url = trailingslashit( $settings['url'] ?? '' );
 		$api_key  = $settings['api_key'] ?? '';
 
 		if ( ! $base_url || ! $api_key || ! $list_id ) {
 			WMA_Logger::log( 'Sendy subscribe skipped — missing config.', 'WARNING' );
-			return false;
+			return 'Config error';
 		}
 
 		$response = wp_remote_post( $base_url . 'subscribe', [
@@ -26,17 +26,16 @@ class WMA_Sendy {
 
 		if ( is_wp_error( $response ) ) {
 			WMA_Logger::log( 'Sendy subscribe error: ' . $response->get_error_message(), 'ERROR' );
-			return false;
+			return 'API error';
 		}
 
-		$body    = trim( wp_remote_retrieve_body( $response ) );
-		$success = ( $body === '1' );
+		$body = trim( wp_remote_retrieve_body( $response ) );
 
-		if ( ! $success ) {
+		if ( $body !== '1' && $body !== 'Already subscribed.' ) {
 			WMA_Logger::log( "Sendy subscribe failed for {$email} on list {$list_id}: {$body}", 'WARNING' );
 		}
 
-		return $success;
+		return $body;
 	}
 
 	public static function is_subscribed( string $email, string $list_id ): bool {
