@@ -91,7 +91,7 @@ msgid "Email Message"
 msgstr "E-mail üzenet"
 
 msgid "Injected into [WMA_MESSAGE]. Use [WMA_COUPON_CODE_PERCENT] to display the coupon code sent via the shortcode parameter."
-msgstr "Behelyettesítődik a [WMA_MESSAGE] helyére. Használja a [WMA_COUPON_CODE_PERCENT] kódot a kuponkód megjelenítéséhez."
+msgstr "Behelyettesítődik a [WMA_MESSAGE] helyére. Használd a [WMA_COUPON_CODE_PERCENT] kódot a kuponkód megjelenítéséhez."
 
 msgid "Global HTML email template used by all outgoing emails. Available shortcodes:"
 msgstr "Globális HTML e-mail sablon, amelyet minden kimenő e-mail használ. Elérhető shortcode-ok:"
@@ -241,7 +241,7 @@ msgid "Email address"
 msgstr "E-mail cím"
 
 msgid "Your name"
-msgstr "Neve"
+msgstr "Neved"
 
 msgid "your@email.com"
 msgstr "email@cim.hu"
