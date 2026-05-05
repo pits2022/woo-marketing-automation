@@ -147,7 +147,15 @@ class WMA_Shortcode {
 			}
 		}
 
-		WMA_Sendy::subscribe_async( $email, $name, $list_id );
+		$status = WMA_Sendy::subscribe( $email, $name, $list_id );
+
+		if ( $status === 'Already subscribed.' ) {
+			wp_send_json_error( [ 'message' => __( 'You are already subscribed.', 'woo-marketing-automation' ) ] );
+		}
+
+		if ( $status !== '1' ) {
+			wp_send_json_error( [ 'message' => __( 'Subscription failed. Please try again later.', 'woo-marketing-automation' ) ] );
+		}
 
 		$welcome_subject = WMA_Settings::get( 'welcome_email.subject' ) ?? '';
 		$welcome_message = WMA_Settings::get( 'welcome_email.message' ) ?? '';
