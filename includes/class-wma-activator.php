@@ -45,11 +45,16 @@ class WMA_Activator {
 		];
 	}
 
+	/**
+	 * Default reactivation emails.
+	 * Note: These are translated at activation time and stored in the database.
+	 * If the site language changes later, these stored values will remain in the initial language.
+	 */
 	private static function default_reactivation_emails(): array {
 		return [
 			[
 				'id'                      => 1,
-				'name'                    => 'Review Request',
+				'name'                    => __( 'Review Request', 'woo-marketing-automation' ),
 				'enabled'                 => true,
 				'wait_period'             => 7,
 				'email_subject'           => '',
@@ -62,7 +67,7 @@ class WMA_Activator {
 			],
 			[
 				'id'                      => 2,
-				'name'                    => 'Refill Offer',
+				'name'                    => __( 'Refill Offer', 'woo-marketing-automation' ),
 				'enabled'                 => true,
 				'wait_period'             => 30,
 				'email_subject'           => '',
@@ -75,7 +80,7 @@ class WMA_Activator {
 			],
 			[
 				'id'                      => 3,
-				'name'                    => 'For-Sale Products',
+				'name'                    => __( 'For-Sale Products', 'woo-marketing-automation' ),
 				'enabled'                 => true,
 				'wait_period'             => 60,
 				'email_subject'           => '',
@@ -88,7 +93,7 @@ class WMA_Activator {
 			],
 			[
 				'id'                      => 4,
-				'name'                    => 'Final Notification',
+				'name'                    => __( 'Final Notification', 'woo-marketing-automation' ),
 				'enabled'                 => true,
 				'wait_period'             => 90,
 				'email_subject'           => '',
@@ -102,6 +107,10 @@ class WMA_Activator {
 		];
 	}
 
+	/**
+	 * Default global HTML template.
+	 * Note: Translatable strings like "Unsubscribe" are captured at activation time.
+	 */
 	private static function default_template_html(): string {
 		return '<!DOCTYPE html>
 <html lang="en">
@@ -126,7 +135,7 @@ class WMA_Activator {
 [WMA_COUPON_CODE_FREESHIPMENT]
 
 <p style="margin-top:30px;font-size:12px;color:#999;border-top:1px solid #eee;padding-top:15px;">
-<a href="[WMA_UNSUBSCRIBE_URL]" style="color:#999;">Unsubscribe</a>
+<a href="[WMA_UNSUBSCRIBE_URL]" style="color:#999;">' . esc_html__( 'Unsubscribe', 'woo-marketing-automation' ) . '</a>
 </p>
 
 </td></tr>

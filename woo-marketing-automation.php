@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Marketing Automation
  * Plugin URI:  https://github.com/pits2022/woo-marketing-automation/
  * Description: Automated marketing emails and Sendy newsletter subscription for WooCommerce.
- * Version:     1.0.0
+ * Version:     1.0.2
  * Requires at least: 6.9
  * Requires PHP: 8.1
  * Author:      Professional IT Services
@@ -20,7 +20,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'WMA_VERSION',     '1.0.0' );
+define( 'WMA_VERSION',     '1.0.2' );
 define( 'WMA_PLUGIN_DIR',  plugin_dir_path( __FILE__ ) );
 define( 'WMA_PLUGIN_URL',  plugin_dir_url( __FILE__ ) );
 define( 'WMA_PLUGIN_FILE', __FILE__ );

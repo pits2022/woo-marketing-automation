@@ -269,7 +269,7 @@ class WMA_Admin {
 					<?php wp_nonce_field( 'wma_test_email', 'wma_nonce' ); ?>
 					<p>
 						<label for="wma_test_email_address"><strong><?php esc_html_e( 'Email Address:', 'woo-marketing-automation' ); ?></strong></label><br>
-						<input type="email" id="wma_test_email_address" name="test_email_address" required class="regular-text" placeholder="you@example.com">
+						<input type="email" id="wma_test_email_address" name="test_email_address" required class="regular-text" placeholder="<?php esc_attr_e( 'you@example.com', 'woo-marketing-automation' ); ?>">
 					</p>
 					<p>
 						<?php submit_button( __( 'Send Test Email', 'woo-marketing-automation' ), 'secondary', 'submit', false ); ?>
@@ -638,7 +638,7 @@ class WMA_Admin {
 		$base_color = WMA_Email::get_base_color();
 
 		$data = [
-			'message'                      => '<p>This is a test message. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>',
+			'message'                      => '<p>This is a test message. Oh joy! A test message just for you!</p>',
 			'list_id'                      => 'TEST-LIST-ID',
 			'review_products'              => '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;">Product</th><th style="padding:8px;text-align:center;border-bottom:2px solid #ddd;">Qty</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Product 1</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">1</td></tr><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Product 2</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">2</td></tr></tbody></table>',
 			'discount_products'            => '<div style="margin-bottom:15px;border:1px solid #eee;padding:10px;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;font-size:16px;">Test Sale Product</a><br><del style="color:#999;font-size:14px;">$20.00</del> <ins style="color:#c00;font-size:14px;text-decoration:none;">$15.00</ins></div>',
