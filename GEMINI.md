@@ -31,6 +31,8 @@ This is a standard WordPress plugin and does not require a build step (no npm/co
 
 ## Development Conventions
 
+Always use subagent-driven method when possible. Never create PR or push commits, they are handled manually by developers.
+
 ### Coding Style & Standards
 
 -   **Namespace/Prefix:** All classes use the `WMA_` prefix and are located in the `includes/` directory.
