@@ -638,15 +638,15 @@ class WMA_Admin {
 		$base_color = WMA_Email::get_base_color();
 
 		$data = [
-			'message'                      => '<p>' . esc_html__( 'This is a test message. Oh joy! A test message just for you!', 'woo-marketing-automation' ) . '</p>',
+			'message'                      => '<p>This is a test message. Oh joy! A test message just for you!</p>',
 			'list_id'                      => 'TEST-LIST-ID',
-			'review_products'              => '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;">' . esc_html__( 'Product', 'woo-marketing-automation' ) . '</th><th style="padding:8px;text-align:center;border-bottom:2px solid #ddd;">' . esc_html__( 'Qty', 'woo-marketing-automation' ) . '</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">' . esc_html__( 'Test Product 1', 'woo-marketing-automation' ) . '</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">1</td></tr><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">' . esc_html__( 'Test Product 2', 'woo-marketing-automation' ) . '</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">2</td></tr></tbody></table>',
-			'discount_products'            => '<div style="margin-bottom:15px;border:1px solid #eee;padding:10px;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;font-size:16px;">' . esc_html__( 'Test Sale Product', 'woo-marketing-automation' ) . '</a><br><del style="color:#999;font-size:14px;">$20.00</del> <ins style="color:#c00;font-size:14px;text-decoration:none;">$15.00</ins></div>',
+			'review_products'              => '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;">Product</th><th style="padding:8px;text-align:center;border-bottom:2px solid #ddd;">Qty</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Product 1</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">1</td></tr><tr><td style="padding:8px;border-bottom:1px solid #eee;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Product 2</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-align:center;">2</td></tr></tbody></table>',
+			'discount_products'            => '<div style="margin-bottom:15px;border:1px solid #eee;padding:10px;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;font-size:16px;">Test Sale Product</a><br><del style="color:#999;font-size:14px;">$20.00</del> <ins style="color:#c00;font-size:14px;text-decoration:none;">$15.00</ins></div>',
 			'coupon_percent_code'          => 'WMA-TEST-PERCENT',
 			'coupon_freeship_code'         => 'WMA-TEST-FREESHIP',
 		];
 
-		$sent = WMA_Email::send( $email, __( 'Test User', 'woo-marketing-automation' ), __( 'Test Email: Marketing Automation', 'woo-marketing-automation' ), $data );
+		$sent = WMA_Email::send( $email, 'Test User', 'Test Email: Marketing Automation', $data );
 
 		if ( $sent ) {
 			wp_safe_redirect( add_query_arg( 'test-email-sent', '1', admin_url( 'admin.php?page=wma&tab=email-template' ) ) );
