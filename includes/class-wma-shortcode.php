@@ -150,7 +150,7 @@ class WMA_Shortcode {
 		$status = WMA_Sendy::subscribe( $email, $name, $list_id );
 
 		if ( $status === 'Already subscribed.' ) {
-			wp_send_json_error( [ 'message' => __( 'You are already subscribed.', 'woo-marketing-automation' ) ] );
+			wp_send_json_success( [ 'message' => __( 'You are already subscribed.', 'woo-marketing-automation' ) ] );
 		}
 
 		if ( $status !== '1' ) {
