@@ -14,7 +14,7 @@ class WMA_Sendy {
 		}
 
 		$response = wp_remote_post( $base_url . 'subscribe', [
-			'timeout' => 15,
+			'timeout' => 5,
 			'body'    => [
 				'api_key' => $api_key,
 				'email'   => $email,
@@ -48,7 +48,7 @@ class WMA_Sendy {
 		}
 
 		$response = wp_remote_post( $base_url . 'api/subscribers/subscription-status.php', [
-			'timeout' => 15,
+			'timeout' => 5,
 			'body'    => [
 				'api_key' => $api_key,
 				'email'   => $email,
