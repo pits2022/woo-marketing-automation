@@ -37,7 +37,7 @@ msgid "Settings saved."
 msgstr "Beállítások mentve."
 
 msgid "Unauthorized."
-msgstr "Nincs jogosultsága."
+msgstr "Nincs jogosultságod."
 
 msgid "Sendy URL"
 msgstr "Sendy URL"
@@ -49,7 +49,7 @@ msgid "Sendy API Key"
 msgstr "Sendy API kulcs"
 
 msgid "Cloudflare Turnstile Site Key"
-msgstr "Cloudflare Turnstile webhelyi kulcs"
+msgstr "Cloudflare Turnstile site kulcs"
 
 msgid "Optional. Renders the CAPTCHA widget in subscription forms."
 msgstr "Opcionális. Megjeleníti a CAPTCHA widgetet a feliratkozási űrlapokon."
@@ -160,7 +160,7 @@ msgid "Delete"
 msgstr "Törlés"
 
 msgid "Delete this reactivation email?"
-msgstr "Törli ezt a reaktivációs e-mailt?"
+msgstr "Törlöd ezt a reaktivációs e-mailt?"
 
 msgid "Edit Reactivation Email"
 msgstr "Reaktivációs e-mail szerkesztése"
@@ -220,7 +220,7 @@ msgid "Cancel"
 msgstr "Mégse"
 
 msgid "Your coupon code:"
-msgstr "A kuponkódja:"
+msgstr "A kuponkód:"
 
 msgid "Product"
 msgstr "Termék"
@@ -250,16 +250,16 @@ msgid "Subscribe"
 msgstr "Feliratkozás"
 
 msgid "Thank you! You are now subscribed."
-msgstr "Köszönjük! Sikeresen feliratkozott."
+msgstr "Köszönjük! Sikeresen feliratkoztál."
 
 msgid "Invalid request."
 msgstr "Érvénytelen kérés."
 
 msgid "Please enter a valid email address."
-msgstr "Kérjük, adjon meg érvényes e-mail címet."
+msgstr "Kérjük, adj meg érvényes e-mail címet."
 
 msgid "CAPTCHA verification failed. Please try again."
-msgstr "A CAPTCHA ellenőrzés sikertelen. Kérjük, próbálja újra."
+msgstr "A CAPTCHA ellenőrzés sikertelen. Kérjük, próbáld újra."
 
 msgid "An error occurred. Please try again."
-msgstr "Hiba történt. Kérjük, próbálja újra."
+msgstr "Hiba történt. Kérjük, próbáld újra."

@@ -53,6 +53,10 @@ This is a standard WordPress plugin and does not require a build step (no npm/co
 -   **Email Templates:** Global HTML template is stored in settings and uses bracketed placeholders (e.g., `[WMA_MESSAGE]`).
 -   **Order Meta:** Tracking sent emails via `_wma_email_{id}_sent` meta key on WooCommerce orders.
 
+### Messages and transations
+
+Text messages should be friendly and quiver.
+
 ## Project Structure
 
 -   `assets/`: CSS and JS for both admin and frontend.
