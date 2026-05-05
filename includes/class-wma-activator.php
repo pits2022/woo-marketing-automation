@@ -45,6 +45,11 @@ class WMA_Activator {
 		];
 	}
 
+	/**
+	 * Default reactivation emails.
+	 * Note: These are translated at activation time and stored in the database.
+	 * If the site language changes later, these stored values will remain in the initial language.
+	 */
 	private static function default_reactivation_emails(): array {
 		return [
 			[
@@ -102,6 +107,10 @@ class WMA_Activator {
 		];
 	}
 
+	/**
+	 * Default global HTML template.
+	 * Note: Translatable strings like "Unsubscribe" are captured at activation time.
+	 */
 	private static function default_template_html(): string {
 		return '<!DOCTYPE html>
 <html lang="en">
