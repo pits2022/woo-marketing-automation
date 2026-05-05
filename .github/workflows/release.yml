@@ -28,14 +28,18 @@ jobs:
           TAG_NAME=${{ github.ref_name }}
           DATE=$(date +'%Y-%m-%d')
           
-          # Find the previous tag. If none exists, use the first commit.
-          PREV_TAG=$(git describe --tags --abbrev=0 "$TAG_NAME^" 2>/dev/null || git rev-list --max-parents=0 HEAD)
+          # Find the previous tag.
+          PREV_TAG=$(git describe --tags --abbrev=0 "$TAG_NAME^" 2>/dev/null || echo "")
           
           echo "Current Tag: $TAG_NAME"
           echo "Previous Tag: $PREV_TAG"
           
-          # Get commits between previous tag and current tag
-          COMMITS=$(git log --no-merges --pretty=format:"- %s (%h)" "$PREV_TAG".."$TAG_NAME")
+          # Get commits. If no previous tag, get all commits up to current tag.
+          if [ -z "$PREV_TAG" ]; then
+            COMMITS=$(git log --no-merges --pretty=format:"- %s (%h)" "$TAG_NAME")
+          else
+            COMMITS=$(git log --no-merges --pretty=format:"- %s (%h)" "$PREV_TAG".."$TAG_NAME")
+          fi
           
           if [ -z "$COMMITS" ]; then
             COMMITS="- No documented changes."
