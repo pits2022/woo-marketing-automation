@@ -263,3 +263,9 @@ msgstr "A CAPTCHA ellenőrzés sikertelen. Kérjük, próbáld újra."
 
 msgid "An error occurred. Please try again."
 msgstr "Hiba történt. Kérjük, próbáld újra."
+
+msgid "You are already subscribed."
+msgstr "Már feliratkoztál."
+
+msgid "Subscription failed. Please try again later."
+msgstr "A feliratkozás sikertelen. Próbáld újra később."
