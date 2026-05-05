@@ -55,9 +55,9 @@ Always use subagent-driven method when possible. Never create PR or push commits
 -   **Email Templates:** Global HTML template is stored in settings and uses bracketed placeholders (e.g., `[WMA_MESSAGE]`).
 -   **Order Meta:** Tracking sent emails via `_wma_email_{id}_sent` meta key on WooCommerce orders.
 
-### Messages and transations
+### Messages and translations
 
-Text messages should be friendly and quiver.
+Text messages should be friendly and on a first-name basis (in Hungarian: "tegezős forma").
 
 ## Project Structure
 
