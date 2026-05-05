@@ -126,7 +126,7 @@ class WMA_Activator {
 [WMA_COUPON_CODE_FREESHIPMENT]
 
 <p style="margin-top:30px;font-size:12px;color:#999;border-top:1px solid #eee;padding-top:15px;">
-<a href="[WMA_UNSUBSCRIBE_URL]" style="color:#999;">Unsubscribe</a>
+<a href="[WMA_UNSUBSCRIBE_URL]" style="color:#999;">' . esc_html__( 'Unsubscribe', 'woo-marketing-automation' ) . '</a>
 </p>
 
 </td></tr>
