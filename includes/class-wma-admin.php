@@ -269,7 +269,7 @@ class WMA_Admin {
 					<?php wp_nonce_field( 'wma_test_email', 'wma_nonce' ); ?>
 					<p>
 						<label for="wma_test_email_address"><strong><?php esc_html_e( 'Email Address:', 'woo-marketing-automation' ); ?></strong></label><br>
-						<input type="email" id="wma_test_email_address" name="test_email_address" required class="regular-text" placeholder="you@example.com">
+						<input type="email" id="wma_test_email_address" name="test_email_address" required class="regular-text" placeholder="<?php esc_attr_e( 'you@example.com', 'woo-marketing-automation' ); ?>">
 					</p>
 					<p>
 						<?php submit_button( __( 'Send Test Email', 'woo-marketing-automation' ), 'secondary', 'submit', false ); ?>
