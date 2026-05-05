@@ -49,7 +49,7 @@ class WMA_Activator {
 		return [
 			[
 				'id'                      => 1,
-				'name'                    => 'Review Request',
+				'name'                    => __( 'Review Request', 'woo-marketing-automation' ),
 				'enabled'                 => true,
 				'wait_period'             => 7,
 				'email_subject'           => '',
@@ -62,7 +62,7 @@ class WMA_Activator {
 			],
 			[
 				'id'                      => 2,
-				'name'                    => 'Refill Offer',
+				'name'                    => __( 'Refill Offer', 'woo-marketing-automation' ),
 				'enabled'                 => true,
 				'wait_period'             => 30,
 				'email_subject'           => '',
@@ -75,7 +75,7 @@ class WMA_Activator {
 			],
 			[
 				'id'                      => 3,
-				'name'                    => 'For-Sale Products',
+				'name'                    => __( 'For-Sale Products', 'woo-marketing-automation' ),
 				'enabled'                 => true,
 				'wait_period'             => 60,
 				'email_subject'           => '',
@@ -88,7 +88,7 @@ class WMA_Activator {
 			],
 			[
 				'id'                      => 4,
-				'name'                    => 'Final Notification',
+				'name'                    => __( 'Final Notification', 'woo-marketing-automation' ),
 				'enabled'                 => true,
 				'wait_period'             => 90,
 				'email_subject'           => '',
