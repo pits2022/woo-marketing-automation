@@ -1,0 +1,88 @@
+name: Generate Changelog and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - '[0-9]+.[0-9]+.[0-9]+' # Matches version tags like 1.0.3
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Need full history to find previous tags
+
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          # Get the current tag name
+          TAG_NAME=${{ github.ref_name }}
+          DATE=$(date +'%Y-%m-%d')
+          
+          # Find the previous tag. If none exists, use the first commit.
+          PREV_TAG=$(git describe --tags --abbrev=0 "$TAG_NAME^" 2>/dev/null || git rev-list --max-parents=0 HEAD)
+          
+          echo "Current Tag: $TAG_NAME"
+          echo "Previous Tag: $PREV_TAG"
+          
+          # Get commits between previous tag and current tag
+          COMMITS=$(git log --no-merges --pretty=format:"- %s (%h)" "$PREV_TAG".."$TAG_NAME")
+          
+          if [ -z "$COMMITS" ]; then
+            COMMITS="- No documented changes."
+          fi
+          
+          # Save the release notes for the GitHub Release body
+          echo "$COMMITS" > release_notes.md
+          
+          # Create temporary file with the new release block
+          echo "" > new_changelog.md
+          echo "## [$TAG_NAME] - $DATE" >> new_changelog.md
+          echo "" >> new_changelog.md
+          echo "$COMMITS" >> new_changelog.md
+          echo "" >> new_changelog.md
+          
+          # If CHANGELOG.md doesn't exist, create it with a header
+          if [ ! -f CHANGELOG.md ]; then
+            echo "# Changelog" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            echo "All notable changes to this project will be documented in this file." >> CHANGELOG.md
+          fi
+          
+          # Insert the new changelog block after the "All notable changes..." line
+          sed -i '/All notable changes to this project will be documented in this file./r new_changelog.md' CHANGELOG.md
+          rm new_changelog.md
+
+      - name: Commit and Push CHANGELOG.md
+        run: |
+          # Configure Git user for the bot
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # We need to switch to main branch to commit the CHANGELOG
+          # The action checked out the tag, so we are in detached HEAD
+          # Since the user said tags are pushed to main, we target main.
+          git checkout main
+          
+          git add CHANGELOG.md
+          
+          # Only commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "docs: update CHANGELOG for ${{ github.ref_name }} [skip ci]"
+            git push origin main
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release_notes.md
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
