@@ -64,18 +64,8 @@ class WMA_Sendy {
 		return trim( wp_remote_retrieve_body( $response ) ) === 'Subscribed';
 	}
 
-	public static function subscribe_async( string $email, string $name, string $list_id ): void {
-		wp_schedule_single_event( time(), 'wma_sendy_subscribe', [ $email, $name, $list_id ] );
-	}
-
-	public static function handle_async_subscribe( string $email, string $name, string $list_id ): void {
-		self::subscribe( $email, $name, $list_id );
-	}
-
 	public static function unsubscribe_url( string $email, string $list_id ): string {
 		$base_url = trailingslashit( WMA_Settings::get( 'sendy.url' ) ?? '' );
 		return $base_url . 'unsubscribe/' . base64_encode( $email ) . '/' . base64_encode( $list_id );
 	}
 }
-
-add_action( 'wma_sendy_subscribe', [ 'WMA_Sendy', 'handle_async_subscribe' ], 10, 3 );
