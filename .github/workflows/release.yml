@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - 'v*'
-      - '[0-9]+.[0-9]+.[0-9]+' # Matches version tags like 1.0.3
+      - '*.*.*' # Matches version tags like 1.0.3
 
 jobs:
   release:
@@ -17,6 +17,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Need full history to find previous tags
+
+      - name: Switch to main branch
+        run: git checkout main
 
       - name: Generate Changelog
         id: changelog
@@ -64,11 +67,6 @@ jobs:
           # Configure Git user for the bot
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # We need to switch to main branch to commit the CHANGELOG
-          # The action checked out the tag, so we are in detached HEAD
-          # Since the user said tags are pushed to main, we target main.
-          git checkout main
           
           git add CHANGELOG.md
           
