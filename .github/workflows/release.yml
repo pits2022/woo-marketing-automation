@@ -98,6 +98,15 @@ jobs:
           fi
           rm new_changelog.md
 
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body_path: release_notes.md
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: true
+
       - name: Commit and Push Changes
         env:
           TAG_NAME: ${{ github.ref_name }}
@@ -120,13 +129,13 @@ jobs:
             git push origin main
           fi
 
-      - name: Create GitHub Release
+      - name: Publish Release
         uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          body_path: release_notes.md
           tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          draft: false
 
       - name: Cleanup
+        if: always()
         run: rm -f release_notes.md

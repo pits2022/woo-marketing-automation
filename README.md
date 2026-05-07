@@ -136,6 +136,19 @@ If you are contributing from a **forked repository**, you must compile the `.mo`
    ```
 3. Commit and push both the `.po` and `.mo` files to your fork.
 
+## Automated Workflows
+
+### Release Process
+
+The `release.yml` workflow is triggered by pushing a tag (e.g., `1.0.3` or `v1.0.3`). It automatically:
+1. Bumps the version numbers in the code and translation headers.
+2. Recompiles all translation files.
+3. Updates `CHANGELOG.md`.
+4. Pushes these changes directly to the `main` branch.
+5. Creates a GitHub Release with generated release notes.
+
+**Important:** Because this workflow pushes directly to `main`, if you have **Branch Protection Rules** enabled for the `main` branch, you must ensure that the `github-actions[bot]` (or the account associated with the `GITHUB_TOKEN`) is allowed to bypass these rules (e.g., "Allow force pushes" is not needed, but "Restrict pushes" must allow the bot, or "Require pull request reviews before merging" must be bypassed for this specific automated commit).
+
 ## Logging
 
 Debug output is written to `wp-content/uploads/wma-logs/wma-debug.log`.
