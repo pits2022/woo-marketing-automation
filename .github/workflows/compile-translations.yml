@@ -23,6 +23,7 @@ jobs:
 
       - name: Compile .po files to .mo
         run: |
+          set -euo pipefail
           for file in languages/*.po; do
             if [ -f "$file" ]; then
               filename=$(basename "$file" .po)
@@ -33,6 +34,7 @@ jobs:
 
       - name: Commit and Push compiled files
         run: |
+          set -euo pipefail
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           

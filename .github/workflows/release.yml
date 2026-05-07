@@ -3,6 +3,7 @@ name: Generate Changelog and Release
 on:
   push:
     tags:
+      - 'v*'
       - '*.*.*'
 
 jobs:
@@ -22,6 +23,7 @@ jobs:
         env:
           TAG_NAME: ${{ github.ref_name }}
         run: |
+          set -euo pipefail
           # Extract version number (strip leading 'v' if present)
           VERSION=${TAG_NAME#v}
           echo "Bumping version to $VERSION"
@@ -52,6 +54,7 @@ jobs:
         env:
           TAG_NAME: ${{ github.ref_name }}
         run: |
+          set -euo pipefail
           # Current date
           DATE=$(date +'%Y-%m-%d')
           
@@ -89,14 +92,17 @@ jobs:
             echo "All notable changes to this project will be documented in this file." >> CHANGELOG.md
           fi
           
-          # Insert the new changelog block after the "All notable changes..." line
-          sed -i '/All notable changes to this project will be documented in this file./r new_changelog.md' CHANGELOG.md
+          # Insert the new changelog block after the "All notable changes..." line if it doesn't exist
+          if ! grep -q "## \[$TAG_NAME\]" CHANGELOG.md; then
+            sed -i '/All notable changes to this project will be documented in this file./r new_changelog.md' CHANGELOG.md
+          fi
           rm new_changelog.md
 
       - name: Commit and Push Changes
         env:
           TAG_NAME: ${{ github.ref_name }}
         run: |
+          set -euo pipefail
           # Configure Git user for the bot
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"

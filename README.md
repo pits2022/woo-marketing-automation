@@ -119,6 +119,23 @@ However, you may want to add custom CSS to style the success and error status me
 }
 ```
 
+## Translations
+
+The plugin is translation-ready and includes English and Hungarian locales. 
+
+### Contributing Translations
+
+We use an automated GitHub Actions workflow to compile `.po` files into `.mo` files upon pull request. However, due to GitHub security restrictions, **this automation only works for pull requests coming from branches within the same repository.**
+
+If you are contributing from a **forked repository**, you must compile the `.mo` files locally before submitting your pull request:
+
+1. Edit the `.po` file in the `languages/` directory.
+2. Compile it to `.mo` using `msgfmt` (part of the `gettext` package):
+   ```bash
+   msgfmt -o languages/woo-marketing-automation-hu_HU.mo languages/woo-marketing-automation-hu_HU.po
+   ```
+3. Commit and push both the `.po` and `.mo` files to your fork.
+
 ## Logging
 
 Debug output is written to `wp-content/uploads/wma-logs/wma-debug.log`.
