@@ -1,0 +1,46 @@
+name: Compile Translations
+
+on:
+  pull_request:
+    paths:
+      - 'languages/*.po'
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Install gettext
+        run: sudo apt-get update && sudo apt-get install -y gettext
+
+      - name: Compile .po files to .mo
+        run: |
+          for file in languages/*.po; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file" .po)
+              msgfmt -o "languages/${filename}.mo" "$file"
+              echo "Compiled $file to languages/${filename}.mo"
+            fi
+          done
+
+      - name: Commit and Push compiled files
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add languages/*.mo
+          
+          if git diff --staged --quiet; then
+            echo "No translation changes to commit"
+          else
+            git commit -m "chore: recompile translation .mo files [skip ci]"
+            git push
+          fi
