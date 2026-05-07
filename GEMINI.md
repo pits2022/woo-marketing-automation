@@ -59,6 +59,8 @@ Always use subagent-driven method when possible. Never create PR or push commits
 
 Text messages should be friendly and on a first-name basis (in Hungarian: "tegezős forma").
 
+After every translation-related change always recompile the `.mo` files.
+
 ## Project Structure
 
 -   `assets/`: CSS and JS for both admin and frontend.
