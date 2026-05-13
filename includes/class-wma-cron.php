@@ -32,17 +32,26 @@ class WMA_Cron {
 		$limit  = 50;
 		$customers_list = WMA_Settings::get( 'customer_lists.customers_list' ) ?? '';
 
+		WMA_Logger::log( "Reactivation {$email_id}: checking orders for {$target} (wait_period={$wait_period} days)." );
+
 		while ( true ) {
 			$orders = wc_get_orders( [
 				'limit'          => $limit,
 				'paged'          => $page,
 				'status'         => 'completed',
-				'date_completed' => $target . '...' . $target,
-				'meta_key'       => $meta_key,
-				'meta_compare'   => 'NOT EXISTS',
+				'date_completed' => $target . ' 00:00:00...' . $target . ' 23:59:59',
+				'meta_query'     => [
+					[
+						'key'     => $meta_key,
+						'compare' => 'NOT EXISTS',
+					],
+				],
 			] );
 
 			if ( empty( $orders ) ) {
+				if ( $page === 1 ) {
+					WMA_Logger::log( "Reactivation {$email_id}: no eligible orders found for {$target}." );
+				}
 				break;
 			}
 
