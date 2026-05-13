@@ -30,7 +30,7 @@ class WMA_Cron {
 		$target         = gmdate( 'Y-m-d', strtotime( "-{$wait_period} days" ) );
 		$limit          = 50;
 		$customers_list = WMA_Settings::get( 'customer_lists.customers_list' ) ?? '';
-		$seen_ids       = [];
+		$skipped_ids    = [];
 		$total_sent     = 0;
 
 		WMA_Logger::log( "Reactivation {$email_id}: checking orders for {$target} (wait_period={$wait_period} days)." );
@@ -48,14 +48,19 @@ class WMA_Cron {
 				],
 			];
 
-			if ( ! empty( $seen_ids ) ) {
-				$query_args['exclude'] = $seen_ids;
+			if ( ! empty( $skipped_ids ) ) {
+				$query_args['exclude'] = $skipped_ids;
 			}
 
 			$orders = wc_get_orders( $query_args );
 
+			if ( count( $skipped_ids ) > 10000 ) {
+				WMA_Logger::log( "Reactivation {$email_id}: safety limit reached — stopping after 10000 skipped orders.", 'WARNING' );
+				break;
+			}
+
 			if ( empty( $orders ) ) {
-				if ( empty( $seen_ids ) ) {
+				if ( $total_sent === 0 && empty( $skipped_ids ) ) {
 					WMA_Logger::log( "Reactivation {$email_id}: no eligible orders found for {$target}." );
 				} else {
 					WMA_Logger::log( "Reactivation {$email_id}: finished — {$total_sent} email(s) sent for {$target}." );
@@ -64,11 +69,11 @@ class WMA_Cron {
 			}
 
 			foreach ( $orders as $order ) {
-				$seen_ids[] = $order->get_id();
-				$to         = $order->get_billing_email();
-				$name       = trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
+				$to   = $order->get_billing_email();
+				$name = trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
 
 				if ( $customers_list && ! WMA_Sendy::is_subscribed( $to, $customers_list ) ) {
+					$skipped_ids[] = $order->get_id();
 					WMA_Logger::log( "Reactivation {$email_id}: {$to} not subscribed — skipping." );
 					continue;
 				}
