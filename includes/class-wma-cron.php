@@ -89,6 +89,7 @@ class WMA_Cron {
 					$total_sent++;
 					WMA_Logger::log( "Reactivation {$email_id} sent to {$to} (order #{$order->get_id()})." );
 				} else {
+					$skipped_ids[] = $order->get_id();
 					WMA_Logger::log( "Reactivation {$email_id}: failed to send to {$to} (order #{$order->get_id()}).", 'WARNING' );
 				}
 			}
