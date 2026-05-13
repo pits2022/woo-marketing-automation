@@ -27,17 +27,17 @@ class WMA_Cron {
 			return;
 		}
 
-		$target = gmdate( 'Y-m-d', strtotime( "-{$wait_period} days" ) );
-		$page   = 1;
-		$limit  = 50;
+		$target         = gmdate( 'Y-m-d', strtotime( "-{$wait_period} days" ) );
+		$limit          = 50;
 		$customers_list = WMA_Settings::get( 'customer_lists.customers_list' ) ?? '';
+		$seen_ids       = [];
+		$total_sent     = 0;
 
 		WMA_Logger::log( "Reactivation {$email_id}: checking orders for {$target} (wait_period={$wait_period} days)." );
 
 		while ( true ) {
-			$orders = wc_get_orders( [
+			$query_args = [
 				'limit'          => $limit,
-				'paged'          => $page,
 				'status'         => 'completed',
 				'date_completed' => $target . ' 00:00:00...' . $target . ' 23:59:59',
 				'meta_query'     => [
@@ -46,18 +46,27 @@ class WMA_Cron {
 						'compare' => 'NOT EXISTS',
 					],
 				],
-			] );
+			];
+
+			if ( ! empty( $seen_ids ) ) {
+				$query_args['exclude'] = $seen_ids;
+			}
+
+			$orders = wc_get_orders( $query_args );
 
 			if ( empty( $orders ) ) {
-				if ( $page === 1 ) {
+				if ( empty( $seen_ids ) ) {
 					WMA_Logger::log( "Reactivation {$email_id}: no eligible orders found for {$target}." );
+				} else {
+					WMA_Logger::log( "Reactivation {$email_id}: finished — {$total_sent} email(s) sent for {$target}." );
 				}
 				break;
 			}
 
 			foreach ( $orders as $order ) {
-				$to   = $order->get_billing_email();
-				$name = trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
+				$seen_ids[] = $order->get_id();
+				$to         = $order->get_billing_email();
+				$name       = trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
 
 				if ( $customers_list && ! WMA_Sendy::is_subscribed( $to, $customers_list ) ) {
 					WMA_Logger::log( "Reactivation {$email_id}: {$to} not subscribed — skipping." );
@@ -70,11 +79,10 @@ class WMA_Cron {
 				if ( $sent ) {
 					$order->update_meta_data( $meta_key, current_time( 'mysql' ) );
 					$order->save();
+					$total_sent++;
 					WMA_Logger::log( "Reactivation {$email_id} sent to {$to} (order #{$order->get_id()})." );
 				}
 			}
-
-			$page++;
 		}
 	}
 
