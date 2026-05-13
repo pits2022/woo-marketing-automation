@@ -36,6 +36,11 @@ class WMA_Cron {
 		WMA_Logger::log( "Reactivation {$email_id}: checking orders for {$target} (wait_period={$wait_period} days)." );
 
 		while ( true ) {
+			if ( count( $skipped_ids ) >= 10000 ) {
+				WMA_Logger::log( "Reactivation {$email_id}: safety limit reached — {$total_sent} email(s) sent, stopping after 10000 skipped orders.", 'WARNING' );
+				break;
+			}
+
 			$query_args = [
 				'limit'          => $limit,
 				'status'         => 'completed',
@@ -53,11 +58,6 @@ class WMA_Cron {
 			}
 
 			$orders = wc_get_orders( $query_args );
-
-			if ( count( $skipped_ids ) > 10000 ) {
-				WMA_Logger::log( "Reactivation {$email_id}: safety limit reached — stopping after 10000 skipped orders.", 'WARNING' );
-				break;
-			}
 
 			if ( empty( $orders ) ) {
 				if ( $total_sent === 0 && empty( $skipped_ids ) ) {
