@@ -53,6 +53,8 @@ class WMA_Cron {
 				],
 			];
 
+			// Always query page 1; exclude skipped orders so setting meta on processed
+			// orders doesn't shift positions and cause page 2 to skip eligible ones.
 			if ( ! empty( $skipped_ids ) ) {
 				$query_args['exclude'] = $skipped_ids;
 			}
@@ -86,6 +88,8 @@ class WMA_Cron {
 					$order->save();
 					$total_sent++;
 					WMA_Logger::log( "Reactivation {$email_id} sent to {$to} (order #{$order->get_id()})." );
+				} else {
+					WMA_Logger::log( "Reactivation {$email_id}: failed to send to {$to} (order #{$order->get_id()}).", 'WARNING' );
 				}
 			}
 		}
