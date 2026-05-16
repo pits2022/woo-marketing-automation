@@ -4,6 +4,9 @@ defined( 'ABSPATH' ) || exit;
 class WMA_Cron {
 
 	public static function init(): void {
+		if ( ! wp_next_scheduled( 'wma_daily_cron' ) ) {
+			wp_schedule_event( time(), 'daily', 'wma_daily_cron' );
+		}
 		add_action( 'wma_daily_cron', [ self::class, 'run_daily' ] );
 	}
 
