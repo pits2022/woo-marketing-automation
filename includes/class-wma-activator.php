@@ -7,9 +7,6 @@ class WMA_Activator {
 		if ( ! get_option( 'wma_settings' ) ) {
 			update_option( 'wma_settings', self::default_settings(), false );
 		}
-		if ( ! wp_next_scheduled( 'wma_daily_cron' ) ) {
-			wp_schedule_event( time(), 'daily', 'wma_daily_cron' );
-		}
 	}
 
 	public static function deactivate(): void {
