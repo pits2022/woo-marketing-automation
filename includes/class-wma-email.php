@@ -84,26 +84,24 @@ class WMA_Email {
 
 		foreach ( $order->get_items() as $item ) {
 			$product = $item->get_product();
-			if ( ! $product ) {
-				continue;
+			$name    = esc_html( $item->get_name() );
+			if ( $product ) {
+				$url   = esc_url( get_permalink( $product->get_id() ) . '#tab-reviews' );
+				$cell  = "<a href='{$url}' style='color:" . esc_attr( $base_color ) . ";text-decoration:none;font-weight:bold;'>{$name}</a>";
+			} else {
+				$cell = $name;
 			}
-			$url  = esc_url( get_permalink( $product->get_id() ) );
-			$name = esc_html( $item->get_name() );
-			$qty  = (int) $item->get_quantity();
 			$rows .= "<tr>"
-				. "<td style='padding:8px;border-bottom:1px solid #eee;'><a href='{$url}' style='color:" . esc_attr( $base_color ) . ";text-decoration:none;font-weight:bold;'>{$name}</a></td>"
-				. "<td style='padding:8px;border-bottom:1px solid #eee;text-align:center;'>{$qty}</td>"
+				. "<td style='padding:8px;border-bottom:1px solid #eee;font-size:inherit;'>{$cell}</td>"
 				. "</tr>";
 		}
 		if ( ! $rows ) {
 			return '';
 		}
 		$th_product = esc_html__( 'Product', 'woo-marketing-automation' );
-		$th_qty     = esc_html__( 'Qty', 'woo-marketing-automation' );
 		return "<table style='width:100%;border-collapse:collapse;'>"
 			. "<thead><tr>"
-			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;'>{$th_product}</th>"
-			. "<th style='padding:8px;text-align:center;border-bottom:2px solid #ddd;'>{$th_qty}</th>"
+			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;'>{$th_product}</th>"
 			. "</tr></thead>"
 			. "<tbody>{$rows}</tbody>"
 			. "</table>";
