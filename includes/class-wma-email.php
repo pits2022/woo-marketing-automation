@@ -84,26 +84,24 @@ class WMA_Email {
 
 		foreach ( $order->get_items() as $item ) {
 			$product = $item->get_product();
-			if ( ! $product ) {
-				continue;
+			$name    = esc_html( $item->get_name() );
+			if ( $product ) {
+				$url   = esc_url( get_permalink( $product->get_id() ) . '#tab-reviews' );
+				$cell  = "<a href='{$url}' style='color:" . esc_attr( $base_color ) . ";text-decoration:none;font-weight:bold;'>{$name}</a>";
+			} else {
+				$cell = $name;
 			}
-			$url  = esc_url( get_permalink( $product->get_id() ) );
-			$name = esc_html( $item->get_name() );
-			$qty  = (int) $item->get_quantity();
 			$rows .= "<tr>"
-				. "<td style='padding:8px;border-bottom:1px solid #eee;'><a href='{$url}' style='color:" . esc_attr( $base_color ) . ";text-decoration:none;font-weight:bold;'>{$name}</a></td>"
-				. "<td style='padding:8px;border-bottom:1px solid #eee;text-align:center;'>{$qty}</td>"
+				. "<td style='padding:8px;border-bottom:1px solid #eee;font-size:inherit;'>{$cell}</td>"
 				. "</tr>";
 		}
 		if ( ! $rows ) {
 			return '';
 		}
 		$th_product = esc_html__( 'Product', 'woo-marketing-automation' );
-		$th_qty     = esc_html__( 'Qty', 'woo-marketing-automation' );
 		return "<table style='width:100%;border-collapse:collapse;'>"
 			. "<thead><tr>"
-			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;'>{$th_product}</th>"
-			. "<th style='padding:8px;text-align:center;border-bottom:2px solid #ddd;'>{$th_qty}</th>"
+			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;'>{$th_product}</th>"
 			. "</tr></thead>"
 			. "<tbody>{$rows}</tbody>"
 			. "</table>";
@@ -159,11 +157,11 @@ class WMA_Email {
 					: '';
 			}
 			$rows .= "<tr>"
-				. "<td style='padding:8px;border-bottom:1px solid #eee;width:70px;'>{$img_html}</td>"
-				. "<td style='padding:8px;border-bottom:1px solid #eee;'><a href='{$url}' style='color:" . esc_attr( $base_color ) . ";text-decoration:none;font-weight:bold;'>{$name}</a></td>"
-				. "<td style='padding:8px;border-bottom:1px solid #eee;text-decoration:line-through;color:#999;'>{$regular}</td>"
-				. "<td style='padding:8px;border-bottom:1px solid #eee;color:#c00;font-weight:bold;'>{$sale}</td>"
-				. "<td style='padding:8px;border-bottom:1px solid #eee;'><span style='background:#c00;color:#fff;padding:2px 6px;border-radius:3px;font-size:12px;'>-{$pct}%</span></td>"
+				. "<td style='padding:8px;border-bottom:1px solid #eee;width:70px;font-size:inherit;'>{$img_html}</td>"
+				. "<td style='padding:8px;border-bottom:1px solid #eee;font-size:inherit;'><a href='{$url}' style='color:" . esc_attr( $base_color ) . ";text-decoration:none;font-weight:bold;'>{$name}</a></td>"
+				. "<td style='padding:8px;border-bottom:1px solid #eee;text-decoration:line-through;color:#999;font-size:inherit;'>{$regular}</td>"
+				. "<td style='padding:8px;border-bottom:1px solid #eee;color:#c00;font-weight:bold;font-size:inherit;'>{$sale}</td>"
+				. "<td style='padding:8px;border-bottom:1px solid #eee;font-size:inherit;'><span style='background:#c00;color:#fff;padding:2px 6px;border-radius:3px;font-size:12px;'>-{$pct}%</span></td>"
 				. "</tr>";
 		}
 
@@ -175,11 +173,11 @@ class WMA_Email {
 
 		return "<table style='width:100%;border-collapse:collapse;'>"
 			. "<thead><tr>"
-			. "<th style='padding:8px;border-bottom:2px solid #ddd;'>{$th_img}</th>"
-			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;'>{$th_product}</th>"
-			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;'>{$th_regular}</th>"
-			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;'>{$th_sale}</th>"
-			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;'>{$th_discount}</th>"
+			. "<th style='padding:8px;border-bottom:2px solid #ddd;font-size:inherit;'>{$th_img}</th>"
+			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;'>{$th_product}</th>"
+			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;'>{$th_regular}</th>"
+			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;'>{$th_sale}</th>"
+			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;'>{$th_discount}</th>"
 			. "</tr></thead>"
 			. "<tbody>{$rows}</tbody>"
 			. "</table>";

@@ -225,9 +225,6 @@ msgstr "Your coupon code:"
 msgid "Product"
 msgstr "Product"
 
-msgid "Qty"
-msgstr "Qty"
-
 msgid "Regular"
 msgstr "Regular"
 
