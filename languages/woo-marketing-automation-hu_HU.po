@@ -225,8 +225,6 @@ msgstr "A kuponkód:"
 msgid "Product"
 msgstr "Termék"
 
-msgid "Qty"
-msgstr "Db"
 
 msgid "Regular"
 msgstr "Normál ár"
