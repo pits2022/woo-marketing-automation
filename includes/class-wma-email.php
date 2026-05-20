@@ -79,28 +79,38 @@ class WMA_Email {
 	}
 
 	public static function build_review_products( WC_Order $order ): string {
-		$rows = '';
+		$rows       = '';
 		$base_color = self::get_base_color();
 
 		foreach ( $order->get_items() as $item ) {
-			$product = $item->get_product();
-			$name    = esc_html( $item->get_name() );
+			$product  = $item->get_product();
+			$name     = esc_html( $item->get_name() );
+			$img_html = '';
 			if ( $product ) {
-				$url   = esc_url( get_permalink( $product->get_id() ) . '#tab-reviews' );
-				$cell  = "<a href='{$url}' style='color:" . esc_attr( $base_color ) . ";text-decoration:none;font-weight:bold;'>{$name}</a>";
+				$img_id = $product->get_image_id();
+				if ( $img_id ) {
+					$img_url  = wp_get_attachment_image_url( $img_id, 'thumbnail' );
+					$img_html = $img_url
+						? "<img src='" . esc_url( $img_url ) . "' style='width:60px;height:60px;object-fit:cover;border-radius:4px;' alt=''>"
+						: '';
+				}
+				$url  = esc_url( get_permalink( $product->get_id() ) . '#tab-reviews' );
+				$cell = "<a href='{$url}' style='color:" . esc_attr( $base_color ) . ";text-decoration:none;font-weight:bold;'>{$name}</a>";
 			} else {
 				$cell = $name;
 			}
 			$rows .= "<tr>"
+				. "<td style='padding:8px;border-bottom:1px solid #eee;width:70px;font-size:inherit;'>{$img_html}</td>"
 				. "<td style='padding:8px;border-bottom:1px solid #eee;font-size:inherit;'>{$cell}</td>"
 				. "</tr>";
 		}
 		if ( ! $rows ) {
 			return '';
 		}
-		$th_product = esc_html__( 'Product', 'woo-marketing-automation' );
-		return "<table style='width:100%;border-collapse:collapse;'>"
+		$th_product = esc_html__( 'Purchased products', 'woo-marketing-automation' );
+		return "<table style='width:100%;border-collapse:collapse;margin-bottom:24px;'>"
 			. "<thead><tr>"
+			. "<th style='padding:8px;border-bottom:2px solid #ddd;font-size:inherit;'></th>"
 			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;'>{$th_product}</th>"
 			. "</tr></thead>"
 			. "<tbody>{$rows}</tbody>"
@@ -166,7 +176,7 @@ class WMA_Email {
 		}
 
 		$th_img      = '';
-		$th_product  = esc_html__( 'Product', 'woo-marketing-automation' );
+		$th_product  = esc_html__( 'Sale products', 'woo-marketing-automation' );
 		$th_regular  = esc_html__( 'Regular', 'woo-marketing-automation' );
 		$th_sale     = esc_html__( 'Sale', 'woo-marketing-automation' );
 		$th_discount = esc_html__( 'Discount', 'woo-marketing-automation' );
