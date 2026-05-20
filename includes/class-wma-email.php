@@ -175,7 +175,6 @@ class WMA_Email {
 				. "</tr>";
 		}
 
-		$th_img      = '';
 		$th_product  = esc_html__( 'Sale products', 'woo-marketing-automation' );
 		$th_regular  = esc_html__( 'Regular', 'woo-marketing-automation' );
 		$th_sale     = esc_html__( 'Sale', 'woo-marketing-automation' );
@@ -183,7 +182,7 @@ class WMA_Email {
 
 		return "<table style='width:100%;border-collapse:collapse;'>"
 			. "<thead><tr>"
-			. "<th style='padding:8px;border-bottom:2px solid #ddd;font-size:inherit;'>{$th_img}</th>"
+			. "<th style='padding:8px;border-bottom:2px solid #ddd;font-size:inherit;'></th>"
 			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;'>{$th_product}</th>"
 			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;'>{$th_regular}</th>"
 			. "<th style='padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;'>{$th_sale}</th>"
