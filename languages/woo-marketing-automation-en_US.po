@@ -260,3 +260,9 @@ msgstr "CAPTCHA verification failed. Please try again."
 
 msgid "An error occurred. Please try again."
 msgstr "An error occurred. Please try again."
+
+msgid "Purchased products"
+msgstr "Purchased products"
+
+msgid "Sale products"
+msgstr "Sale products"

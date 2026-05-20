@@ -267,3 +267,9 @@ msgstr "Már feliratkoztál."
 
 msgid "Subscription failed. Please try again later."
 msgstr "A feliratkozás sikertelen. Próbáld újra később."
+
+msgid "Purchased products"
+msgstr "Megvásárolt termékek"
+
+msgid "Sale products"
+msgstr "Akciós termékek"

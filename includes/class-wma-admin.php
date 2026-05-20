@@ -640,8 +640,22 @@ class WMA_Admin {
 		$data = [
 			'message'                      => '<p>This is a test message. Oh joy! A test message just for you!</p>',
 			'list_id'                      => 'TEST-LIST-ID',
-			'review_products'              => '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;">Product</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #eee;font-size:inherit;"><a href="#tab-reviews" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Product 1</a></td></tr><tr><td style="padding:8px;border-bottom:1px solid #eee;font-size:inherit;"><a href="#tab-reviews" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Product 2</a></td></tr></tbody></table>',
-			'discount_products'            => '<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="padding:8px;border-bottom:2px solid #ddd;font-size:inherit;"></th><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;">Product</th><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;">Regular</th><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;">Sale</th><th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;">Discount</th></tr></thead><tbody><tr><td style="padding:8px;border-bottom:1px solid #eee;width:70px;font-size:inherit;"></td><td style="padding:8px;border-bottom:1px solid #eee;font-size:inherit;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Sale Product</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-decoration:line-through;color:#999;font-size:inherit;">$20.00</td><td style="padding:8px;border-bottom:1px solid #eee;color:#c00;font-weight:bold;font-size:inherit;">$15.00</td><td style="padding:8px;border-bottom:1px solid #eee;font-size:inherit;"><span style="background:#c00;color:#fff;padding:2px 6px;border-radius:3px;font-size:12px;">-25%</span></td></tr></tbody></table>',
+			'review_products'              => '<table style="width:100%;border-collapse:collapse;margin-bottom:24px;"><thead><tr>'
+				. '<th style="padding:8px;border-bottom:2px solid #ddd;font-size:inherit;"></th>'
+				. '<th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;">' . esc_html__( 'Purchased products', 'woo-marketing-automation' ) . '</th>'
+				. '</tr></thead><tbody>'
+				. '<tr><td style="padding:8px;border-bottom:1px solid #eee;width:70px;font-size:inherit;"></td><td style="padding:8px;border-bottom:1px solid #eee;font-size:inherit;"><a href="#tab-reviews" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Product 1</a></td></tr>'
+				. '<tr><td style="padding:8px;border-bottom:1px solid #eee;width:70px;font-size:inherit;"></td><td style="padding:8px;border-bottom:1px solid #eee;font-size:inherit;"><a href="#tab-reviews" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Product 2</a></td></tr>'
+				. '</tbody></table>',
+			'discount_products'            => '<table style="width:100%;border-collapse:collapse;"><thead><tr>'
+				. '<th style="padding:8px;border-bottom:2px solid #ddd;font-size:inherit;"></th>'
+				. '<th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;">' . esc_html__( 'Sale products', 'woo-marketing-automation' ) . '</th>'
+				. '<th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;">' . esc_html__( 'Regular', 'woo-marketing-automation' ) . '</th>'
+				. '<th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;">' . esc_html__( 'Sale', 'woo-marketing-automation' ) . '</th>'
+				. '<th style="padding:8px;text-align:left;border-bottom:2px solid #ddd;font-size:inherit;">' . esc_html__( 'Discount', 'woo-marketing-automation' ) . '</th>'
+				. '</tr></thead><tbody>'
+				. '<tr><td style="padding:8px;border-bottom:1px solid #eee;width:70px;font-size:inherit;"></td><td style="padding:8px;border-bottom:1px solid #eee;font-size:inherit;"><a href="#" style="color:' . esc_attr( $base_color ) . ';text-decoration:none;font-weight:bold;">Test Sale Product</a></td><td style="padding:8px;border-bottom:1px solid #eee;text-decoration:line-through;color:#999;font-size:inherit;">$20.00</td><td style="padding:8px;border-bottom:1px solid #eee;color:#c00;font-weight:bold;font-size:inherit;">$15.00</td><td style="padding:8px;border-bottom:1px solid #eee;font-size:inherit;"><span style="background:#c00;color:#fff;padding:2px 6px;border-radius:3px;font-size:12px;">-25%</span></td></tr>'
+				. '</tbody></table>',
 			'coupon_percent_code'          => 'WMA-TEST-PERCENT',
 			'coupon_freeship_code'         => 'WMA-TEST-FREESHIP',
 		];
