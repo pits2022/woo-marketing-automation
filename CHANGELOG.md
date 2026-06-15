@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.7] - 2026-06-15
+
+- Test email now renders the configured Welcome Email content into `[WMA_MESSAGE]` (instead of a hardcoded placeholder message), with a fallback notice when no Welcome Email is configured
+- Fix missing translations on the Test Email section and several other admin strings: 19 strings were absent from the Hungarian catalog and 21 from the English catalog (manually maintained `.po` files were never updated); all added and `.mo` files recompiled
+
 ## [1.0.6] - 2026-05-20
 
 - Fix email layout: add product image to WMA_REVIEW_PRODUCTS table (matching WMA_DISCOUNT_PRODUCTS format)

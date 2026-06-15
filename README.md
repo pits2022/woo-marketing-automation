@@ -67,6 +67,8 @@ Available placeholders:
 | `[WMA_COUPON_CODE_FREESHIPMENT]` | Free shipping expiry days > 0 |
 | `[WMA_UNSUBSCRIBE_URL]` | Always |
 
+**Send Test Email** — sends a preview of the template to any address. The test email renders the **Welcome Email** content (the message configured on the Welcome Email tab) into the `[WMA_MESSAGE]` placeholder, alongside sample product tables and coupon codes, so you can preview exactly what new subscribers receive. If no Welcome Email message has been configured yet, a placeholder notice is shown instead.
+
 ### Reactivation Emails tab
 
 Add, edit, enable/disable, and delete reactivation email entries. Each email defines:
