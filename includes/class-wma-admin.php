@@ -637,8 +637,16 @@ class WMA_Admin {
 
 		$base_color = WMA_Email::get_base_color();
 
+		// Render the configured Welcome Email content into the test email so the
+		// preview reflects what subscribers actually receive. Fall back to a
+		// generic notice when no welcome message has been configured yet.
+		$welcome_message = WMA_Settings::get( 'welcome_email.message' ) ?? '';
+		if ( '' === trim( wp_strip_all_tags( (string) $welcome_message ) ) ) {
+			$welcome_message = '<p>' . esc_html__( 'No Welcome Email content has been configured yet. Set it on the Welcome Email tab to preview it here.', 'woo-marketing-automation' ) . '</p>';
+		}
+
 		$data = [
-			'message'                      => '<p>This is a test message. Oh joy! A test message just for you!</p>',
+			'message'                      => $welcome_message,
 			'list_id'                      => 'TEST-LIST-ID',
 			'review_products'              => '<table style="width:100%;border-collapse:collapse;margin-bottom:24px;"><thead><tr>'
 				. '<th style="padding:8px;border-bottom:2px solid #ddd;font-size:inherit;"></th>'
